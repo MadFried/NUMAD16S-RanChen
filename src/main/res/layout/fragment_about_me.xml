@@ -16,7 +16,9 @@
         android:id="@+id/button"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="79dp" />
+        android:layout_marginTop="79dp"
+        android:textSize="30dp"
+        android:textStyle="bold|italic" />
 
     <Button
         android:layout_width="wrap_content"
@@ -25,7 +27,9 @@
         android:id="@+id/error_button"
         android:layout_below="@+id/button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp" />
+        android:layout_marginTop="26dp"
+        android:textSize="30dp"
+        android:textStyle="bold|italic" />
 
     <Button
         android:layout_width="wrap_content"
@@ -34,7 +38,9 @@
         android:id="@+id/tictac_button"
         android:layout_below="@+id/error_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp" />
+        android:layout_marginTop="26dp"
+        android:textSize="30dp"
+        android:textStyle="bold|italic" />
 
     <Button
         android:layout_width="wrap_content"
@@ -43,5 +49,7 @@
         android:id="@+id/quit_button"
         android:layout_below="@+id/tictac_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp" />
+        android:layout_marginTop="26dp"
+        android:textSize="30dp"
+        android:textStyle="bold|italic" />
 </RelativeLayout>

@@ -17,7 +17,8 @@
         android:id="@+id/name_text"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp" />
+        android:layout_marginTop="41dp"
+        android:textStyle="bold|italic" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,7 +27,8 @@
         android:text="@string/email_label"
         android:id="@+id/email_text"
         android:layout_below="@+id/name_text"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold|italic" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,7 +37,8 @@
         android:text="@string/year_label"
         android:id="@+id/yearInSchool_text"
         android:layout_below="@+id/email_text"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold|italic" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -44,7 +47,8 @@
         android:text="@string/degree_label"
         android:id="@+id/degree_text"
         android:layout_below="@+id/yearInSchool_text"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold|italic" />
 
 
 </RelativeLayout>
