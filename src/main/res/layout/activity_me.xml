@@ -12,19 +12,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment"
     android:name="edu.neu.madcourse.ranchen.MeActivityFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout="@layout/fragment_me" />
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:layout="@layout/fragment_me"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="10dp" />
 
     <fragment
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:name="edu.neu.madcourse.ranchen.MyPicFragment"
         android:id="@+id/fragment2"
-        android:layout_alignParentTop="true"
+        tools:layout="@layout/fragment_my_picture"
+        android:layout_below="@+id/fragment"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="171dp"
-        tools:layout="@layout/fragment_my_picture" />
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,6 +35,6 @@
         android:id="@+id/phone_id"
         android:layout_below="@+id/fragment2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp" />
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>
