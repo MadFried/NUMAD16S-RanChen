@@ -45,4 +45,6 @@ both sides in the larger game.
     <string name="email_label">chen.ra@husky.neu.edu</string>
     <string name="year_label">2nd Year MS</string>
     <string name="degree_label">Master of Science in Telecom</string>
+    <string name="dictionary_label">Dictionary</string>
+    <string name="title_activity_dictionary">Dictionary</string>
 </resources>

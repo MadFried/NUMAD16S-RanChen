@@ -45,9 +45,21 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/dictionary_button"
+        android:text="@string/dictionary_label"
+        android:layout_below="@id/tictac_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"/>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/quit_label"
         android:id="@+id/quit_button"
-        android:layout_below="@+id/tictac_button"
+        android:layout_below="@+id/dictionary_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="26dp"
         android:textSize="30dp"
