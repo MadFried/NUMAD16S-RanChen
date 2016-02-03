@@ -31,6 +31,7 @@ public class aboutMeActivityFragment extends Fragment {
         View aboutButton = rootView.findViewById(R.id.button);
         View quitButton = rootView.findViewById(R.id.quit_button);
         View errorButton = rootView.findViewById(R.id.error_button);
+        View dictButton = rootView.findViewById(R.id.dictionary_button);
 
         errorButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +51,14 @@ public class aboutMeActivityFragment extends Fragment {
             @Override
         public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), MainActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+
+        dictButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+        public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), Dictionary.class);
                 getActivity().startActivity(intent);
             }
         });
