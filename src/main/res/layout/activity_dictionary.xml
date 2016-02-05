@@ -30,14 +30,6 @@
         android:layout_marginTop="26dp"
         android:layout_centerHorizontal="true" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/list"
-        android:layout_below="@+id/clear_button"
-        android:layout_above="@+id/return_button"
-        android:layout_weight="1">
-    </ListView>
 
     <Button
         android:layout_width="wrap_content"
@@ -56,5 +48,24 @@
         android:layout_alignTop="@+id/return_button"
         android:layout_toRightOf="@+id/clear_button"
         android:layout_toEndOf="@+id/clear_button" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/clear_button"
+        android:layout_alignLeft="@+id/return_button"
+        android:layout_alignStart="@+id/return_button"
+        android:layout_above="@+id/return_button"
+        android:layout_alignRight="@+id/ack_button"
+        android:layout_alignEnd="@+id/ack_button">
+        <TextView
+            android:id="@+id/wordshow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </ScrollView>
+
+
 
 </RelativeLayout>

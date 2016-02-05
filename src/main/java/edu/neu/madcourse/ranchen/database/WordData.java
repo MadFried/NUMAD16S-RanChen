@@ -31,8 +31,7 @@ public class WordData extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE" + TABLE_NAME + "(" + _ID + "INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + WORD + "TEXT NOT NULL);");
+        db.execSQL("CREATE TABLE dictionary (word TEXT NOT NULL);");
 
         String mCSVfile = "wordlist.csv";
         AssetManager manager = ctx.getAssets();
