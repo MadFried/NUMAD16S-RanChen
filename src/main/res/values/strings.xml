@@ -34,7 +34,6 @@ both sides in the larger game.
     2nd year MS\n\
     Master of Science in Telecommunication System Management
 </string>
-
     <string name="title_activity_about_me">aboutMeActivity</string>
     <string name="reportError_label">Generate Error</string>
     <string name="tictac_label">TicTacToe</string>

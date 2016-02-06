@@ -15,5 +15,7 @@
     android:layout_height="wrap_content"
     tools:layout="@layout/fragment_about_me"
         android:layout_gravity="center_horizontal|top"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" />
 </RelativeLayout>
