@@ -15,17 +15,17 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
-        android:name=".Data"
+        android:name=".asn3.Data"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/test">
         <activity
-            android:name=".MainActivity"
+            android:name=".utt.MainActivity"
             android:label="@string/long_app_name" />
-        <activity android:name=".GameActivity" />
+        <activity android:name=".utt.GameActivity" />
         <activity
-            android:name=".aboutMeActivity"
+            android:name=".asn1.aboutMeActivity"
             android:label="@string/creator_name">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
@@ -34,10 +34,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MeActivity"
+            android:name=".asn1.MeActivity"
             android:label="@string/about_label" />
         <activity
-            android:name=".Dictionary"
+            android:name=".asn3.Dictionary"
             android:label="Test Dictionary"></activity>
     </application>
 

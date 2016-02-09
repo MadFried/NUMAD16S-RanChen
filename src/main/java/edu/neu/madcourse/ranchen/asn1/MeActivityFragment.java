@@ -1,4 +1,4 @@
-package edu.neu.madcourse.ranchen;
+package edu.neu.madcourse.ranchen.asn1;
 
 import android.app.Fragment;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import edu.neu.madcourse.ranchen.R;
 
 /**
  * A placeholder fragment containing a simple view.

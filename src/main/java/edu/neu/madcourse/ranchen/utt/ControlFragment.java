@@ -6,7 +6,7 @@
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/eband4 for more book information.
 ***/
-package edu.neu.madcourse.ranchen;
+package edu.neu.madcourse.ranchen.utt;
 
 import android.app.Fragment;
 import android.os.Bundle;

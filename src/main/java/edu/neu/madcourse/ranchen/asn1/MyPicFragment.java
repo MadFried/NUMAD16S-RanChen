@@ -1,10 +1,12 @@
-package edu.neu.madcourse.ranchen;
+package edu.neu.madcourse.ranchen.asn1;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import edu.neu.madcourse.ranchen.R;
 
 /**
  * Created by FredChen on 1/21/16.

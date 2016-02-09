@@ -1,10 +1,12 @@
-package edu.neu.madcourse.ranchen;
+package edu.neu.madcourse.ranchen.asn1;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Activity;
 import android.telephony.TelephonyManager;
 import android.widget.TextView;
+
+import edu.neu.madcourse.ranchen.R;
 
 public class MeActivity extends Activity {
     TextView textView;

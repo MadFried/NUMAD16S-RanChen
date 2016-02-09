@@ -1,4 +1,4 @@
-package edu.neu.madcourse.ranchen;
+package edu.neu.madcourse.ranchen.asn1;
 
 import android.os.Bundle;
 import android.app.Activity;

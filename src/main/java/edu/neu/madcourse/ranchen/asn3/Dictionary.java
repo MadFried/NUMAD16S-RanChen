@@ -1,4 +1,4 @@
-package edu.neu.madcourse.ranchen;
+package edu.neu.madcourse.ranchen.asn3;
 //
 
 import android.app.Activity;
@@ -16,6 +16,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import edu.neu.madcourse.ranchen.R;
+import edu.neu.madcourse.ranchen.asn1.aboutMeActivity;
 
 
 public class Dictionary extends Activity {
