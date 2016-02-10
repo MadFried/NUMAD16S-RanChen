@@ -15,6 +15,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import edu.neu.madcourse.ranchen.R;
@@ -25,6 +29,8 @@ public class Dictionary extends Activity {
     public static final String KEY_RESTORE = "key_restore";
     public static final String PREF_RESTORE = "pref_restore";
     private AlertDialog mDialog;
+    private ArrayList<String> words = new ArrayList<>();
+    private Data d;
 
     public static int binarySearch(ArrayList<String> integerList, String searchValue) {
 
@@ -55,8 +61,24 @@ public class Dictionary extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
 
-        Data d = (Data) getApplication();
-        final ArrayList<String> words = d.getData();
+        try {
+            d = (Data) getApplication();
+            if (d.getData().size() == 0) {
+                ReadFile();
+                d.setData(words);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//    //TEST
+//
+//        try {
+//            System.out.println("size" + ReadFile().size());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+//        final ArrayList<String> words = d.getData();
         //final ArrayList<String> words = data();
 
         final TextView textView = (TextView) findViewById(R.id.wordshow);
@@ -66,6 +88,7 @@ public class Dictionary extends Activity {
         View returnButton = this.findViewById(R.id.return_button);
         View ackButton = this.findViewById(R.id.ack_button);
         final Context context = this;
+
 
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +143,7 @@ public class Dictionary extends Activity {
             public void afterTextChanged(Editable s) {
                 if (s.length() >= 3) {
                     String search = wordLookUp.getText().toString();
-                    if (findWord(words, search)) {
+                    if (findWord(d.getData(), search)) {
                         textView.append("\n" + search);
                         ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                         toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
@@ -139,6 +162,25 @@ public class Dictionary extends Activity {
         } else {
             return false;
         }
+    }
+
+    public ArrayList<String> ReadFile() throws IOException {
+
+        try {
+            InputStream inputStream = getResources().getAssets().open("wordlist.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String receiveString = null;
+
+            while ((receiveString = bufferedReader.readLine()) != null) {
+                words.add(receiveString);
+            }
+            inputStream.close();
+        } catch (IOException e) {
+
+        }
+        return words;
+
     }
 
  /*   public ArrayList<String> data(){

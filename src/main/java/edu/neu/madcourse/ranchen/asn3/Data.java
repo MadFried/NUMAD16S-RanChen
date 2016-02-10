@@ -8,43 +8,81 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import edu.neu.madcourse.ranchen.R;
-
 /**
  * Created by FredChen on 2/5/16.
  */
-public class Data extends Application{
+public class Data extends Application {
 
-    ArrayList<String> data;
+    private ArrayList<String> data = new ArrayList<>();
 
     public Data(){
     }
 
+//    public ArrayList<String> getData() {
+//        ArrayList<String> words = null;
+//        try {
+//            words = ReadFile(getResources().getAssets().open("wordlist.txt"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return words;
+//    }
+//
+//    public void setData(ArrayList<String> d) {
+//        this.data = d;
+//    }
+
+
     public ArrayList<String> getData() {
-        ArrayList<String> words = null;
+        return data;
+    }
+
+    public void setData(ArrayList<String> data) {
+        this.data = data;
+    }
+
+
+
+
+    /*public List<String> readFile() {
+        List<String> li = new ArrayList<String>();
+        String path = "";
         try {
-            words = ReadFile(getResources().openRawResource(R.raw.wordlist));
-        } catch (IOException e) {
+            path =  文件路径
+        } catch (URISyntaxException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+        File f = new File(path);
+        InputStream in = null;
+        try {
+            in = new FileInputStream(f);
+            int ab = in.available();
+            byte b[] = new byte[ab];
+            while (in.read(b, 0, ab) > -1) {
+                System.out.println(new String(b));
+            }
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return words;
-    }
 
-    public void setData(ArrayList<String> d) {
-        this.data = d;
+        return li;
     }
+     */
 
-    public ArrayList<String> ReadFile(InputStream inputStream) throws IOException {
-        //InputStream inputStream = getResources().openRawResource(R.raw.wordlist);
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        String receiveString = null;
-        ArrayList<String> words = new ArrayList<>();
-        while ((receiveString = bufferedReader.readLine()) != null) {
-            words.add(receiveString);
+
+       /* public String read(InputStream is) throws Exception {
+//        InputStream is = getResources().openRawResource(R.raw.wordlist);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        while ((len = is.read(buffer)) != -1) {
+            outputStream.write(buffer,0, len);
         }
-        inputStream.close();
-        return words;
-    }
+        byte[] data = outputStream.toByteArray();
+        return  new String(data);
+    }*/
 
 }
