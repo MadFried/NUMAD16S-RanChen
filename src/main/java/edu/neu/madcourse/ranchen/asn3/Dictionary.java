@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -47,23 +48,15 @@ public class Dictionary extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
 
-        //createFile();
+        new PostTask().execute(getResources().openRawResource(R.raw.wordlist));
 
-        d = (Data) getApplication();
+        //createFile();
+       /* d = (Data) getApplication();
         if (d.getData().size() == 0) {
             read();
             d.setData(words);
-        }
-
-
-        //    //TEST
-//
-//        try {
-//            System.out.println("size" + ReadFile().size());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
+        }*/
+        
         final TextView textView = (TextView) findViewById(R.id.wordshow);
         final EditText wordLookUp = (EditText) Dictionary.this.findViewById(R.id.textView);
 
@@ -137,9 +130,9 @@ public class Dictionary extends Activity {
 
     }
 
-    public ArrayList<String> read() {
+    public ArrayList<String> read(InputStream is) {
         try {
-            InputStream is = getResources().openRawResource(R.raw.wordlist);
+            //InputStream is = getResources().openRawResource(R.raw.wordlist);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             byte[] buffer = new byte[8192];
             int len = 0;
@@ -159,7 +152,32 @@ public class Dictionary extends Activity {
         return words;
     }
 
-    public void createFile() {
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    private class PostTask extends AsyncTask<InputStream, Integer, Long> {
+        @Override
+        protected Long doInBackground(InputStream... params) {
+            InputStream is  = params[0];
+            d = (Data) getApplication();
+            if (d.getData().size() == 0) {
+                read(is);
+                d.setData(words);
+            }
+            return null;
+        }
+    }
+}
+
+//create file in sdcard
+/*public void createFile() {
         String filePath = fileDirPath + "/" + fileName;// path
         try {
             File dir = new File(fileDirPath);// dir path
@@ -192,19 +210,7 @@ public class Dictionary extends Activity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    protected void onPause() {
-        super.onPause();
-
-    }
-}
-
+    }*/
 
 //read from sdcard
 /* public ArrayList<String> readFromSdCard() {
