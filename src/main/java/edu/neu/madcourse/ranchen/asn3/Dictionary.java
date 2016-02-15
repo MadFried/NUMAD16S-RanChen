@@ -9,31 +9,18 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
-import java.lang.reflect.Array;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.security.spec.ECField;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import edu.neu.madcourse.ranchen.R;
 import edu.neu.madcourse.ranchen.asn1.aboutMeActivity;
@@ -42,61 +29,33 @@ import edu.neu.madcourse.ranchen.asn1.aboutMeActivity;
 public class Dictionary extends Activity {
     public static final String KEY_RESTORE = "key_restore";
     public static final String PREF_RESTORE = "pref_restore";
+    public Data d;
+    FileService fileService = new FileService();
     private AlertDialog mDialog;
     private ArrayList<String> words = new ArrayList<String>();
-    private Data d;
-    private byte [] data ;
-
+    private byte[] data;
+    private String word;
+    private String[] values;
     private String fileDirPath = android.os.Environment
             .getExternalStorageDirectory().getAbsolutePath();
 
     private String fileName = "wordlist.txt";
 
 
-
-    public static int binarySearch(ArrayList<String> integerList, String searchValue) {
-
-        int low = 0;
-        int high = integerList.size() - 1;
-        int mid = (low + high) / 2;
-
-        while (low <= high && !integerList.get(mid).equalsIgnoreCase(searchValue)) {
-
-            if (integerList.get(mid).compareTo(searchValue) < 0) {
-                low = mid + 1;
-            } else {
-                high = mid - 1;
-            }
-
-            mid = (low + high) / 2;
-
-            if (low > high) {
-                mid = -1;
-            }
-
-        }
-        return mid;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
 
-        createFile();
+        //createFile();
 
-
-        d = (Data)getApplication();
+        d = (Data) getApplication();
         if (d.getData().size() == 0) {
-            readFromSdCard();
+            read();
             d.setData(words);
         }
 
-       /* d=(Data)getApplication();
-        read();
-        d.setData(words);
-*/
-        //System.out.println("size" + read().indexOf("a",0));
+
         //    //TEST
 //
 //        try {
@@ -104,9 +63,6 @@ public class Dictionary extends Activity {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
-//        final ArrayList<String> words = d.getData();
-        //final ArrayList<String> words = data();
 
         final TextView textView = (TextView) findViewById(R.id.wordshow);
         final EditText wordLookUp = (EditText) Dictionary.this.findViewById(R.id.textView);
@@ -170,7 +126,7 @@ public class Dictionary extends Activity {
             public void afterTextChanged(Editable s) {
                 if (s.length() >= 3) {
                     String search = wordLookUp.getText().toString();
-                    if (findWord(d.getData(), search)) {
+                    if (fileService.findWord(d.getData(), search)) {
                         textView.append("\n" + search);
                         ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                         toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
@@ -181,36 +137,64 @@ public class Dictionary extends Activity {
 
     }
 
-    public boolean findWord(ArrayList<String> strs, String s) {
-        //Collections.sort(strs);
-        int value = binarySearch(strs, s);
-        if (value != -1) {
-            return true;
-        } else {
-            return false;
+    public ArrayList<String> read() {
+        try {
+            InputStream is = getResources().openRawResource(R.raw.wordlist);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[8192];
+            int len = 0;
+            while ((len = is.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, len);
+            }
+            data = outputStream.toByteArray();
+            word = new String(data);
+            values = word.split("\\s*\\r?\\n\\s*");
+            for (String temps : values) {
+                words.add(temps);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            ;
+        }
+        return words;
+    }
+
+    public void createFile() {
+        String filePath = fileDirPath + "/" + fileName;// path
+        try {
+            File dir = new File(fileDirPath);// dir path
+            if (!dir.exists()) {
+                System.out.println("dir not exist");
+                if (dir.mkdirs()) {
+                    System.out.println("build successfully");
+                } else {
+                    System.out.println("fail");
+                }
+            }
+
+            File file = new File(filePath);
+            if (!file.exists()) {
+                System.out.println("not exists");
+                InputStream ins = getResources().openRawResource(
+                        R.raw.wordlist);
+                System.out.println("read in");
+                FileOutputStream fos = new FileOutputStream(file);
+                System.out.println("write out ");
+                byte[] buffer = new byte[8192];
+                int count = 0;
+                while ((count = ins.read(buffer)) > 0) {
+                    fos.write(buffer, 0, count);
+                }
+                System.out.println("already exists");
+                fos.close();
+                ins.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    /*public ArrayList<String> ReadFile() {
-        try {
-            InputStream inputStream = getResources().openRawResource(R.raw.wordlist);
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader,8192);
-            String receiveString = null;
-            //StringBuilder total= new StringBuilder(inputStream.available());
-            while ((receiveString = bufferedReader.readLine()) != null) {
-                words.add(receiveString);
-            }
-            buffereadReader.close();
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return words;
-
-    }*/
-
-   /* protected void onResume(){
+    protected void onResume() {
         super.onResume();
 
     }
@@ -219,155 +203,11 @@ public class Dictionary extends Activity {
         super.onPause();
 
     }
-*/
-    /*public void Read() throws IOException{
-        RandomAccessFile randomAccessFile= new RandomAccessFile("wordlist.txt","r");
-        FileChannel fileChannel = randomAccessFile.getChannel();
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-
-        while (fileChannel.read(buffer) > 0) {
-            buffer.flip();
-            for(int i = 0; i < buffer.limit(); i++) {
-                buffer.get();
-            }
-
-        }
-    }*/
-
-     /* public ArrayList<String> read() {
-          try{
-              InputStream is = getResources().openRawResource(R.raw.wordlist);
-              ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-              byte[] buffer = new byte[1024];
-              int len = 0;
-              while ((len = is.read(buffer)) != -1) {
-                  outputStream.write(buffer,0, len);
-              }
-              data = outputStream.toByteArray();
-              String temp = new String(data);
-              String[] values = temp.split("\r\n");
-              for(String temps : values) {
-                  words.add(temps);
-              }
-              //word = temp.split("\r");
-              //words = Arrays.asList(word);
-          }catch (IOException e) {
-              e.printStackTrace();;
-          }
-          return  words;
-      }*/
+}
 
 
-        private void createFile() {
-            String filePath = fileDirPath + "/" + fileName;// 文件路径
-            try {
-                File dir = new File(fileDirPath);// 目录路径
-                if (!dir.exists()) {// 如果不存在，则创建路径名
-                    System.out.println("要存储的目录不存在");
-                    if (dir.mkdirs()) {// 创建该路径名，返回true则表示创建成功
-                        System.out.println("已经创建文件存储目录");
-                    } else {
-                        System.out.println("创建目录失败");
-                    }
-                }
-                // 目录存在，则将apk中raw中的需要的文档复制到该目录下
-                File file = new File(filePath);
-                if (!file.exists()) {// 文件不存在
-                    System.out.println("要打开的文件不存在");
-                    InputStream ins = getResources().openRawResource(
-                            R.raw.wordlist);// 通过raw得到数据资源
-                    System.out.println("开始读入");
-                    FileOutputStream fos = new FileOutputStream(file);
-                    System.out.println("开始写出");
-                    byte[] buffer = new byte[8192];
-                    int count = 0;// 循环写出
-                    while ((count = ins.read(buffer)) > 0) {
-                        fos.write(buffer, 0, count);
-                    }
-                    System.out.println("已经创建该文件");
-                    fos.close();// 关闭流
-                    ins.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-
-       /* try{
-            File file = new File(Environment.getExternalStorageDirectory(),"wordlist.txt");
-            if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                FileOutputStream fos = new FileOutputStream(file);
-
-                InputStream is = getResources().openRawResource(R.raw.wordlist);
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                byte[] buffer = new byte[1024];
-                int len = 0;
-                while ((len = is.read(buffer)) != -1) {
-                    outputStream.write(buffer,0, len);
-                }
-                data = outputStream.toByteArray();
-                fos.write(data);
-
-                fos.close();
-                is.close();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-       /* String state = Environment.getExternalStorageState();
-
-        FileOutputStream outputstream = null;
-
-        File root = Environment.getExternalStorageDirectory();
-        if (state.equals(Environment.MEDIA_MOUNTED)) {
-            File file = new File (root.getAbsolutePath() + "/txt");
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            byte[] buffer = new byte[1024];
-            int read = 0;
-            try {
-                outputstream = new FileOutputStream(new File(file,fileName));
-                while((read = inputstream.read())>0) {
-                    outputstream.write(buffer,0,read);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            finally {
-                try {
-                    inputstream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    outputstream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }*/
-
-            /*InputStream inputStream = getResources().openRawResource(R.raw.wordlist);
-            File file = new File(Environment.getExternalStorageDirectory(), "wordlist.txt");
-            FileOutputStream out = new FileOutputStream(file);
-            byte[] buffer = new byte[1024];
-            int read = 0;
-            try {
-                while ((read = inputStream.read()) > 0) {
-                    out.write(buffer, 0, read);
-                }
-            } finally {
-                inputStream.close();
-                out.close();
-            }*/
-
-
-
-    public ArrayList<String> readFromSdCard() {
+//read from sdcard
+/* public ArrayList<String> readFromSdCard() {
         File Sdcard = Environment.getExternalStorageDirectory();
         File file = new File(Sdcard, "wordlist.txt");
 
@@ -385,17 +225,35 @@ public class Dictionary extends Activity {
             e.printStackTrace();
         }
         return words;
-    }
+    }*/
 
+//bianary search for string[]
+/* public int searchString(String[] names, String key) {
+            int first = 0;
+            int last  = names.length;
 
-    /*   public static boolean isHave(String[] strs, String target) {
-           Arrays.sort(strs);
-        if(Arrays.binarySearch(strs,target) != 0){
+            while (first < last) {
+                int mid = first + ((last - first) / 2);
+                if (key.compareTo(names[mid]) < 0) {
+                    last = mid;
+                } else if (key.compareTo(names[mid]) > 0) {
+                    first = mid + 1;
+                } else {
+                    return mid;
+                }
+            }
+            return -(first + 1);
+        }*/
+
+     /* public boolean FindWord(String[] words,String args) {
+        int result = searchString(words, args);
+        if (result != -1){
             return true;
         }
-           return false;
-       }*/
-}
+        else {
+            return false;
+        }
+    }*/
 
 
     /*private void clearForm(ViewGroup group)
@@ -430,44 +288,58 @@ public class Dictionary extends Activity {
         }
     }*/
 
-
-     /* public ArrayList<String> ReadFile(InputStream inputStream) throws IOException{
-            //InputStream inputStream = getResources().openRawResource(R.raw.wordlist);
+//bufferedReader readline
+  /*public ArrayList<String> ReadFile() {
+        try {
+            InputStream inputStream = getResources().openRawResource(R.raw.wordlist);
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader,8192);
             String receiveString = null;
-            ArrayList<String> words = new ArrayList<>();
+            //StringBuilder total= new StringBuilder(inputStream.available());
             while ((receiveString = bufferedReader.readLine()) != null) {
                 words.add(receiveString);
             }
+            buffereadReader.close();
             inputStream.close();
-            return words;
-    }*/
-
-
-   /* public char[] read(InputStream is) throws Exception {
-//        InputStream is = getResources().openRawResource(R.raw.wordlist);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len = 0;
-        while ((len = is.read(buffer)) != -1) {
-            outputStream.write(buffer,0, len);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        byte[] data = outputStream.toByteArray();
-        String words = data.toString();
-        char[] word = words.toCharArray();
-        return  word;
+        return words;
+
     }*/
 
-    /*    public boolean findWord(String[] words,String args) {
-            int result = java.util.Arrays.binarySearch(words, args);
-            if (result >= 0){
-                return true;
-            }
-            else {
-                return false;
-            }
-        }*/
+//nio read function
+/* public ArrayList<String> Read(){
+        RandomAccessFile randomAccessFile= null;
+        File Sdcard = Environment.getExternalStorageDirectory();
+        File file = new File(Sdcard, "wordlist.txt");
+        try {
+            randomAccessFile = new RandomAccessFile(file,"r");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        FileChannel fileChannel = randomAccessFile.getChannel();
+        final StringBuilder stringBuilder = new StringBuilder();
+        final CharsetDecoder charsetDecoder = Charset.forName("UTF-8").newDecoder();
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+
+        try {
+            while (fileChannel.read(buffer) > 0) {
+                buffer.flip();
+                stringBuilder.append(charsetDecoder.decode(buffer));
+                buffer.clear();
+                String[] lines = stringBuilder.toString().split("\r\n");
+
+                for(String s:lines) {
+                    words.add(s);
+                }
+                }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return words;
+    }*/
+
 
 
 
