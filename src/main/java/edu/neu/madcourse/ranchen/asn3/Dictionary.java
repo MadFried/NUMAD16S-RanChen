@@ -56,7 +56,7 @@ public class Dictionary extends Activity {
             read();
             d.setData(words);
         }*/
-        
+
         final TextView textView = (TextView) findViewById(R.id.wordshow);
         final EditText wordLookUp = (EditText) Dictionary.this.findViewById(R.id.textView);
 

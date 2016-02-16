@@ -8,8 +8,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.neu.madcourse.ranchen"
-    android:versionCode="4"
-    android:versionName="1.3">
+    android:versionCode="5"
+    android:versionName="1.4">
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -36,11 +36,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".asn1.MeActivity"
-            android:label="@string/about_label" />
-        <activity
             android:name=".asn3.Dictionary"
             android:label="Test Dictionary"/>
+        <activity
+            android:name=".asn1.MeActivity"
+            android:label="@string/about_label" />
     </application>
 
 </manifest>
