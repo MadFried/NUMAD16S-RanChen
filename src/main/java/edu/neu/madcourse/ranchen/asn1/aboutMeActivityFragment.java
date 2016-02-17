@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import edu.neu.madcourse.ranchen.asn5.NewGame;
 import edu.neu.madcourse.ranchen.utt.MainActivity;
 import edu.neu.madcourse.ranchen.R;
 import edu.neu.madcourse.ranchen.asn3.Dictionary;
@@ -33,6 +34,7 @@ public class aboutMeActivityFragment extends Fragment {
         View quitButton = rootView.findViewById(R.id.quit_button);
         View errorButton = rootView.findViewById(R.id.error_button);
         View dictButton = rootView.findViewById(R.id.dictionary_button);
+        View newGameButton = rootView.findViewById(R.id.newgame_button);
 
         errorButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +49,7 @@ public class aboutMeActivityFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                getActivity().startActivity(intent);
                 System.exit(0);
             }
         });
@@ -56,6 +58,14 @@ public class aboutMeActivityFragment extends Fragment {
             @Override
         public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), MainActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+
+        newGameButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+        public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), NewGame.class);
                 getActivity().startActivity(intent);
             }
         });

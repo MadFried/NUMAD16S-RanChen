@@ -53,13 +53,24 @@
         android:textSize="20dp"
         android:textStyle="bold|italic"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/newgame_button"
+        android:text="@string/new_game_label"
+        android:layout_below="@+id/dictionary_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textSize="20dp"
+        android:textStyle="bold|italic" />
+
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/quit_label"
         android:id="@+id/quit_button"
-        android:layout_below="@+id/dictionary_button"
+        android:layout_below="@+id/newgame_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:textSize="20dp"
