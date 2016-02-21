@@ -52,4 +52,5 @@ both sides in the larger game.
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pause_label">pause</string>
     <string name="resume_label">Resume</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

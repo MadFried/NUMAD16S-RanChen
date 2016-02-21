@@ -1,12 +1,28 @@
 package edu.neu.madcourse.ranchen.asn3;
 
+import android.content.res.Resources;
+import android.os.Environment;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import edu.neu.madcourse.ranchen.R;
 
 /**
  * Created by FredChen on 2/15/16.
  */
 public class FileService {
 
+    public FileService() {
+
+    }
 
     public static int binarySearch(ArrayList<String> integerList, String searchValue) {
 
@@ -41,6 +57,5 @@ public class FileService {
             return false;
         }
     }
-
 
 }

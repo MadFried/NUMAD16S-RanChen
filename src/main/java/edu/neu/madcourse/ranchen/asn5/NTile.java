@@ -8,7 +8,7 @@ import android.widget.Button;
 /**
  * Created by FredChen on 2/16/16.
  */
-public class NTile {
+public class NTile{
 
     public enum Owner{
         PICKED, BLANK, AVAILABLE

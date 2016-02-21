@@ -43,6 +43,9 @@
             android:label="@string/about_label" />
         <activity
             android:name=".asn5.NewGame"
+            android:label="@string/title_activity_new_game" />
+        <activity
+            android:name=".scraggle.NewGameActivity"
             android:label="@string/title_activity_new_game"></activity>
     </application>
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.neu.madcourse.ranchen.asn5.NewGame;
+import edu.neu.madcourse.ranchen.scraggle.NewGameActivity;
 import edu.neu.madcourse.ranchen.utt.MainActivity;
 import edu.neu.madcourse.ranchen.R;
 import edu.neu.madcourse.ranchen.asn3.Dictionary;
@@ -65,7 +66,7 @@ public class aboutMeActivityFragment extends Fragment {
         newGameButton.setOnClickListener(new View.OnClickListener(){
             @Override
         public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), NewGame.class);
+                Intent intent = new Intent(getActivity(), NewGameActivity.class);
                 getActivity().startActivity(intent);
             }
         });

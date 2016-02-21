@@ -10,15 +10,19 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,15 +32,20 @@ import edu.neu.madcourse.ranchen.asn1.aboutMeActivity;
 
 
 public class Dictionary extends Activity {
-    public static final String KEY_RESTORE = "key_restore";
-    public static final String PREF_RESTORE = "pref_restore";
-    public Data d;
+//    public Data d;
     FileService fileService = new FileService();
     private AlertDialog mDialog;
+
+    public ArrayList<String> getWords() {
+        return words;
+    }
+
+    public void setWords(ArrayList<String> words) {
+        this.words = words;
+    }
+
     private ArrayList<String> words = new ArrayList<String>();
-    private byte[] data;
-    private String word;
-    private String[] values;
+    public Data d = (Data)getApplication();
     private String fileDirPath = android.os.Environment
             .getExternalStorageDirectory().getAbsolutePath();
 
@@ -48,7 +57,10 @@ public class Dictionary extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
 
-        new PostTask().execute(getResources().openRawResource(R.raw.wordlist));
+        createFile();
+        new PostTask().execute("");
+
+
 
         //createFile();
        /* d = (Data) getApplication();
@@ -120,7 +132,7 @@ public class Dictionary extends Activity {
             public void afterTextChanged(Editable s) {
                 if (s.length() >= 3) {
                     String search = wordLookUp.getText().toString();
-                    if (fileService.findWord(d.getData(), search)) {
+                    if (fileService.findWord(words, search)) {
                         textView.append("\n" + search);
                         ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                         toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
@@ -131,7 +143,93 @@ public class Dictionary extends Activity {
 
     }
 
-    public ArrayList<String> read(InputStream is) {
+    //create file in sdcard
+public void createFile() {
+        String filePath = fileDirPath + "/" + fileName;// path
+        try {
+            File dir = new File(fileDirPath);// dir path
+            if (!dir.exists()) {
+                System.out.println("dir not exist");
+                if (dir.mkdirs()) {
+                    System.out.println("build successfully");
+                } else {
+                    System.out.println("fail");
+                }
+            }
+
+            File file = new File(filePath);
+            if (!file.exists()) {
+                System.out.println("not exists");
+                InputStream ins = getResources().openRawResource(
+                        R.raw.wordlist);
+                System.out.println("read in");
+                FileOutputStream fos = new FileOutputStream(file);
+                System.out.println("write out ");
+                byte[] buffer = new byte[8192];
+                int count = 0;
+                while ((count = ins.read(buffer)) > 0) {
+                    fos.write(buffer, 0, count);
+                }
+                System.out.println("already exists");
+                fos.close();
+                ins.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //read from sdcard
+ public void readFromSdCard() {
+        File Sdcard = Environment.getExternalStorageDirectory();
+        File file = new File(Sdcard, "wordlist.txt");
+        words = new ArrayList<>();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String temp;
+
+            while ((temp = br.readLine())!= null) {
+                words.add(temp);
+            }
+            br.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private class PostTask extends AsyncTask<String, Integer, Long> {
+        @Override
+        protected Long doInBackground(String... params) {
+            String is  = params[0];
+            words = new ArrayList<>();
+            d = (Data)getApplication();
+            if (words.size() == 0) {
+                readFromSdCard();
+               // d.setData(words);
+            }
+            return null;
+        }
+    }
+
+
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+}
+
+//byte read
+   /* public ArrayList<String> read(InputStream is) {
+
         try {
             //InputStream is = getResources().openRawResource(R.raw.wordlist);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -148,34 +246,9 @@ public class Dictionary extends Activity {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            ;
         }
         return words;
-    }
-
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    protected void onPause() {
-        super.onPause();
-
-    }
-
-    private class PostTask extends AsyncTask<InputStream, Integer, Long> {
-        @Override
-        protected Long doInBackground(InputStream... params) {
-            InputStream is  = params[0];
-            d = (Data) getApplication();
-            if (d.getData().size() == 0) {
-                read(is);
-                d.setData(words);
-            }
-            return null;
-        }
-    }
-}
+    }*/
 
 //create file in sdcard
 /*public void createFile() {
