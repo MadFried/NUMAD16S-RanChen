@@ -26,9 +26,29 @@ import edu.neu.madcourse.ranchen.R;
 
 public class WordBuilder {
 
+    private int score = 0;
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     ArrayAdapter<String> output;
+
+    public String getWordInProgress() {
+        return wordInProgress;
+    }
+
+    public void setWordInProgress(String wordInProgress) {
+        this.wordInProgress = wordInProgress;
+    }
+
     String wordInProgress = "";
     NewGameActivity parent;
+
 
     public ArrayList<String> getDictionary() {
         return dictionary;
@@ -75,13 +95,39 @@ public class WordBuilder {
     public boolean addLetter(char c) {
         wordInProgress += Character.toLowerCase(c);
         if (dictionary.contains(wordInProgress) && !(output.getPosition(wordInProgress) >= 0)){
+            addScore(wordInProgress);
             sendCurrentWord();
-            parent.addScore(wordInProgress);
             parent.clearSelections();
         }
         return true;
     }
 
+    public void addScore(String s) {
+        if(s.length() == 0) {
+            score += 0;
+        }
+        if (s.length() == 3) {
+            score += 1;
+        }
+        if(s.length() == 4) {
+            score += 2;
+        }
+        if(s.length() == 5) {
+            score += 3;
+        }
+        if (s.length()== 6) {
+            score += 4;
+        }
+        if (s.length() == 7) {
+            score += 5;
+        }
+        if (s.length() == 8) {
+            score += 6;
+        }
+        if (s.length() == 9) {
+            score += 7;
+        }
+    }
 
     /**
      * Thread-safe getter for the dictionary loading

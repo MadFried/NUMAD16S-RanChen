@@ -46,7 +46,10 @@
             android:label="@string/title_activity_new_game" />
         <activity
             android:name=".scraggle.NewGameActivity"
-            android:label="@string/title_activity_new_game"></activity>
+            android:label="@string/title_activity_new_game" />
+        <activity
+            android:name=".scraggle.PauseGame"
+            android:label="@string/title_activity_pause_game"></activity>
     </application>
 
 </manifest>

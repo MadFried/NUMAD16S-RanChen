@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import edu.neu.madcourse.ranchen.asn5.NewGame;
 import edu.neu.madcourse.ranchen.scraggle.NewGameActivity;
 import edu.neu.madcourse.ranchen.utt.MainActivity;
 import edu.neu.madcourse.ranchen.R;

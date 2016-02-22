@@ -34,13 +34,14 @@ public class LetterButtonTouchListener implements View.OnTouchListener {
             if (previouslyPressed == null ||
                     (Math.abs(previouslyPressed.x - source.x) == 0 && Math.abs(previouslyPressed.y - source.y) == 1) ||
                     (Math.abs(previouslyPressed.x - source.x) == 1 && Math.abs(previouslyPressed.y - source.y) == 0)) {
-                if (previouslyPressed != null) previouslyPressed.setBackgroundColor(Color.rgb(52, 209, 178));
-                previouslyPressed = source;
-                source.setBackgroundColor(Color.rgb(0, 163, 131));
-                source.buttonSelected = true;
-                wordBuilder.addLetter(source.getText().charAt(0));
-            } else {
-                return false;
+                if (previouslyPressed != null)
+                        previouslyPressed.setBackgroundColor(Color.rgb(52, 209, 178));
+                        previouslyPressed = source;
+                        source.setBackgroundColor(Color.rgb(0, 163, 131));
+                        source.buttonSelected = true;
+                        wordBuilder.addLetter(source.getText().charAt(0));
+                } else {
+                    return false;
             }
         }
         return true;
