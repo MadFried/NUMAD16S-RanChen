@@ -155,6 +155,7 @@ public class NewGameActivity extends Activity {
         protected void onPause () {
             super.onPause();
             mTimer.cancel();
+            mTimer = null;
             mMediaPlayer.stop();
             mMediaPlayer.reset();
             mMediaPlayer.release();
@@ -178,8 +179,9 @@ public class NewGameActivity extends Activity {
         mMediaPlayer = MediaPlayer.create(this, R.raw.rx0);
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
-//        mTimer = new MyTimer(remainMilli, 1000);
-//        mTimer.start();
+
+        mTimer = new MyTimer(remainMilli, 1000);
+        //mTimer.start();
     }
 
         /**
@@ -277,7 +279,7 @@ public class NewGameActivity extends Activity {
     }
 
 
-    class MyTimer extends CountDownTimer {
+    public class MyTimer extends CountDownTimer {
 
         //constructor for timer class
         public MyTimer(long millisInFuture, long countDownInterval) {
@@ -291,7 +293,7 @@ public class NewGameActivity extends Activity {
             // reset all variables
             txtTimer.setText("Opps!! Time Up..");
             isRunning=false;
-            remainMilli=0;
+            remainMilli = 0;
             finish();
         }
 

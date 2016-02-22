@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 
 import edu.neu.madcourse.ranchen.R;
 
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -30,6 +31,7 @@ public class NewGameActivityFragment extends Fragment {
         public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), PauseGame.class);
                 getActivity().startActivity(intent);
+
             }
         });
 

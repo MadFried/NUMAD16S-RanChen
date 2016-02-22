@@ -97,7 +97,7 @@ public class WordBuilder {
         if (dictionary.contains(wordInProgress) && !(output.getPosition(wordInProgress) >= 0)){
             addScore(wordInProgress);
             sendCurrentWord();
-            parent.clearSelections();
+            //parent.clearSelections();
         }
         return true;
     }
