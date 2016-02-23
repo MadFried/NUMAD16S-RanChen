@@ -54,4 +54,5 @@ both sides in the larger game.
     <string name="resume_label">Resume</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_pause_game">PauseGame</string>
+    <string name="title_activity_phase_two">PhaseTwo</string>
 </resources>

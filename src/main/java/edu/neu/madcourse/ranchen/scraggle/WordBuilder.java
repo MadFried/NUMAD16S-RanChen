@@ -26,15 +26,6 @@ import edu.neu.madcourse.ranchen.R;
 
 public class WordBuilder {
 
-    private int score = 0;
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
 
     ArrayAdapter<String> output;
 
@@ -46,7 +37,8 @@ public class WordBuilder {
         this.wordInProgress = wordInProgress;
     }
 
-    String wordInProgress = "";
+    private String wordInProgress = "";
+
     NewGameActivity parent;
 
 
@@ -72,7 +64,9 @@ public class WordBuilder {
             @Override
             public void run() {
                 try {
+                    if (dictionary.size() == 0) {
                     loadWordDictionary();
+                    }
                 } catch (IOException ex) {
                     return;
                 }
@@ -95,38 +89,10 @@ public class WordBuilder {
     public boolean addLetter(char c) {
         wordInProgress += Character.toLowerCase(c);
         if (dictionary.contains(wordInProgress) && !(output.getPosition(wordInProgress) >= 0)){
-            addScore(wordInProgress);
             sendCurrentWord();
             //parent.clearSelections();
         }
         return true;
-    }
-
-    public void addScore(String s) {
-        if(s.length() == 0) {
-            score += 0;
-        }
-        if (s.length() == 3) {
-            score += 1;
-        }
-        if(s.length() == 4) {
-            score += 2;
-        }
-        if(s.length() == 5) {
-            score += 3;
-        }
-        if (s.length()== 6) {
-            score += 4;
-        }
-        if (s.length() == 7) {
-            score += 5;
-        }
-        if (s.length() == 8) {
-            score += 6;
-        }
-        if (s.length() == 9) {
-            score += 7;
-        }
     }
 
     /**
@@ -163,15 +129,13 @@ public class WordBuilder {
      */
     private void addWordToList(String word) {
         output.insert(word, 0);
-        clearWord();
+        //clearWord();
     }
 
-    /**
+   /* *
      * Loads the dictionary of words, updating the progress bar as it goes.
-     * Will tell the MainActivity to remove the progress bar when complete.
-     *
-     * @throws IOException If anything goes wrong with the loading.
-     */
+     * Will tell the MainActivity to remove the progress bar when complete.*/
+
     private void loadWordDictionary() throws IOException {
         final ProgressBar progress = (ProgressBar) parent.findViewById(R.id.progress_Bar);
 

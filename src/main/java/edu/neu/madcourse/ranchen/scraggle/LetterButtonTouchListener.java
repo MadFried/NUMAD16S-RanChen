@@ -15,6 +15,8 @@ public class LetterButtonTouchListener implements View.OnTouchListener {
 
     LetterButton previouslyPressed = null;
 
+    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+
     WordBuilder wordBuilder;
 
     public LetterButtonTouchListener(WordBuilder builder) {
@@ -27,13 +29,13 @@ public class LetterButtonTouchListener implements View.OnTouchListener {
             return false;
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             LetterButton source = (LetterButton) view;
-            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
             if (source.buttonSelected)
                 return false;
             if (previouslyPressed == null ||
                     (Math.abs(previouslyPressed.x - source.x) == 0 && Math.abs(previouslyPressed.y - source.y) == 1) ||
-                    (Math.abs(previouslyPressed.x - source.x) == 1 && Math.abs(previouslyPressed.y - source.y) == 0)) {
+                    (Math.abs(previouslyPressed.x - source.x) == 1 && Math.abs(previouslyPressed.y - source.y) == 0) ||
+                    (Math.abs(previouslyPressed.x - source.x) == 1 && Math.abs(previouslyPressed.y - source.y) == 1)) {
                 if (previouslyPressed != null)
                         previouslyPressed.setBackgroundColor(Color.rgb(52, 209, 178));
                         previouslyPressed = source;
@@ -46,4 +48,6 @@ public class LetterButtonTouchListener implements View.OnTouchListener {
         }
         return true;
     }
+
+
 }

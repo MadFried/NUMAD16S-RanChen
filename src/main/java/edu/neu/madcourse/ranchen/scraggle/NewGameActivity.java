@@ -34,6 +34,8 @@ import edu.neu.madcourse.ranchen.R;
 public class NewGameActivity extends Activity {
     Context context;
 
+    private int score = 0;
+
     static private int GridIds[] = {R.id.grid1_layout, R.id.grid2_layout,R.id.grid3_layout,R.id.grid4_layout,R.id.grid5_layout,
     R.id.grid6_layout, R.id.grid7_layout, R.id.grid8_layout, R.id.grid9_layout};
 
@@ -53,6 +55,8 @@ public class NewGameActivity extends Activity {
     long finishTime = 180;
     long nMillisUntilFinished = 0;
 
+    private int flag = 0;
+
     TextView txtTimer;
     MyTimer mTimer;
     long remainMilli = 0;
@@ -60,6 +64,20 @@ public class NewGameActivity extends Activity {
     Button pauseButton;
 
     private MediaPlayer mMediaPlayer;
+
+    ArrayList<String> scrambleList = new ArrayList<>();
+    ArrayList<String> temp = new ArrayList<>();
+
+    StringBuilder sb = new StringBuilder();
+
+    public String getPhaseTwoString() {
+        return phaseTwoString;
+    }
+
+    private String phaseTwoString = null;
+
+
+
 
 
     @Override
@@ -72,6 +90,31 @@ public class NewGameActivity extends Activity {
         //clear button
         Button oopsButton = (Button) this.findViewById(R.id.oops_button);
         oopsButton.setOnTouchListener(new OopsButtonListener());
+
+        //user submit selection
+        Button submitButton = (Button) this.findViewById(R.id.submit_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitSelections();
+            }
+        });
+
+        //phasetwo button
+        Button phaseTwoButton = (Button) this.findViewById(R.id.phaseTwo_button);
+        phaseTwoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (flag == 0) {
+                    phaseTwo();
+                    flag = 1;
+                }else {
+                    Intent intent = new Intent();
+                    intent.setClass(NewGameActivity.this, PhaseTwo.class);
+                    startActivity(intent);
+                }
+            }
+        });
 
         //set timer
         txtTimer = (TextView) findViewById(R.id.timer);
@@ -125,12 +168,13 @@ public class NewGameActivity extends Activity {
                     LetterButton newButton = new LetterButton(this, j / 3, j % 3, false);
                     buttons[i][j] = newButton;
                     newButton.setLayoutParams(all);
-                    grid.addView(newButton,all);
+                    grid.addView(newButton, all);
                     newButton.setBackgroundColor(LETTER_BUTTON_BACKGROUND);
                     newButton.setOnTouchListener(letterButtonListener);
                 }
             }
-        int score = wordBuilder.getScore();
+
+        //show score
         String scr = String.valueOf(score);
         TextView textView = (TextView)findViewById(R.id.scoreboard);
         textView.setText(String.valueOf(scr));
@@ -138,13 +182,15 @@ public class NewGameActivity extends Activity {
 
         if (preferences.getString(String.valueOf(0), null) == null) {
             startNewGame();
-        } else {
-            for (int i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    buttons[i][j].setText(preferences.getString(String.valueOf(j), "-"));
-                }
-            }
         }
+//        else {
+//            int index = 0;
+//            for (int i = 0; i < 9; i++) {
+//                for (int j = 0; j < 9; j++) {
+//                    buttons[i][j].setText(preferences.getString(String.valueOf(index++), "-"));
+//                }
+//            }
+//        }
 
     }
 
@@ -162,11 +208,12 @@ public class NewGameActivity extends Activity {
 
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
-            for (int i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    editor.putString(String.valueOf(i), buttons[i][j].getText().toString());
-                }
-            }
+//            int index = 0;
+//            for (int i = 0; i < 9; i++) {
+//                for (int j = 0; j < 9; j++) {
+//                    editor.putString(String.valueOf(index++), buttons[i][j].getText().toString());
+//                }
+//            }
             for (int i = 0; i < wordListAdapter.getCount(); i++) {
                 editor.putString("l" + i, wordListAdapter.getItem(i));
             }
@@ -214,29 +261,27 @@ public class NewGameActivity extends Activity {
     }*/
 
         /**
-         * Start a new game of Boggle, clearing the list of found words and resetting the board.
+         * Start a new game, clearing the list of found words and resetting the board.
          */
 
-    private void startNewGame() {
-        clearSelections();
-            ArrayList<String> scrambleList = new ArrayList<>();
-            ArrayList<String> temp = new ArrayList<>();
+        private void startNewGame() {
+            clearSelections();
+            pickLetters();
+       /* dic = wordBuilder.getDictionary();
 
-            for (String s : wordBuilder.getDictionary()) {
+            for (String s : dic) {
                 if (s.length() == 9) {
                     temp.add(s);
                 }
-            }
-        ArrayList<String> copy = new ArrayList<String>(temp);
-
+            }*/
             for (int i = 0; i < 9; i++) {
-                scrambleList.add(copy.remove(Math.abs(new Random().nextInt()) % copy.size()));
-            }
-
-            for (int i = 0; i < 9; i++) {
+                int x = Math.abs(new Random().nextInt(temp.size()));
+                scrambleList.add(temp.get(x));
+                //scrambleList.add(temp.remove(Math.abs(new Random().nextInt()) % temp.size()));
                 String s = scrambleList.get(i);
+                char a[] = s.toCharArray();
                 for (int j = 0; j < 9; j++) {
-                    char a[] = s.toCharArray();
+                    //int x = Math.abs(new Random().nextInt(s.length()));
                     char c = a[j];
                     Button b = buttons[i][j];
                     b.setText(String.valueOf(c));
@@ -245,6 +290,52 @@ public class NewGameActivity extends Activity {
             wordBuilder.clearWord();
             wordListAdapter.clear();
         }
+
+       /* private void startNewGame() {
+            clearSelections();
+            pickLetters();
+       *//* dic = wordBuilder.getDictionary();
+
+            for (String s : dic) {
+                if (s.length() == 9) {
+                    temp.add(s);
+                }
+            }*//*
+            int y = Math.abs(new Random().nextInt(8));
+
+            for (int i = 0; i < 9; i++) {
+                int x = Math.abs(new Random().nextInt(temp.size()));
+                scrambleList.add(temp.get(x));
+                //scrambleList.add(temp.remove(Math.abs(new Random().nextInt()) % temp.size()));
+                String s = scrambleList.get(i);
+                char a[] = s.toCharArray();
+                char c = a[0];
+                LetterButton source = buttons[i][y];
+                source.setText(String.valueOf(c));
+                for (int j = 0; j < 9; j++) {
+                    LetterButton next = buttons[i][j];
+                   if ((Math.abs(source.x - next.x) == 0 && Math.abs(source.y - next.y) == 1) ||
+                            (Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 0) ||
+                            (Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 1)) {
+                        char d = a[++j];
+                        next.setText(String .valueOf(d));
+                        source = next;
+                    }
+                }
+            }
+            wordBuilder.clearWord();
+            wordListAdapter.clear();
+        }*/
+
+    private void pickLetters() {
+        ArrayList<String> receiveDictionary = wordBuilder.getDictionary();
+
+        for (String s : receiveDictionary) {
+            if(s.length() == 9) {
+                temp.add(s);
+            }
+        }
+    }
 
     /**
      * Clears all selected letters
@@ -258,10 +349,60 @@ public class NewGameActivity extends Activity {
                 b.buttonSelected = false;
             }
         }
-       /* for (LetterButton b : buttons) {
-            b.setBackgroundColor(LETTER_BUTTON_BACKGROUND);
-            b.buttonSelected = false;
-        }*/
+    }
+
+    public void submitSelections() {
+        if(letterButtonListener.previouslyPressed != null) {
+            addScore(wordBuilder.getWordInProgress());
+            letterButtonListener.previouslyPressed = null;
+        }
+        wordBuilder.clearWord();
+    }
+
+    public void phaseTwo() {
+        for(int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                LetterButton b = buttons[i][j];
+                if(b.buttonSelected == true) {
+                    LetterButton nButton = b;
+                    nButton.buttonSelected = false;
+                    nButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            LetterButton now = (LetterButton) v;
+                            now.setBackgroundColor(Color.BLUE);
+                            sb.append(now.getText().charAt(0));
+                            phaseTwoString = sb.toString();
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+//add score
+    public void addScore(String s) {
+        if (s.length() == 3) {
+            score += 1;
+        }
+        if(s.length() == 4) {
+            score += 2;
+        }
+        if(s.length() == 5) {
+            score += 3;
+        }
+        if (s.length()== 6) {
+            score += 4;
+        }
+        if (s.length() == 7) {
+            score += 5;
+        }
+        if (s.length() == 8) {
+            score += 6;
+        }
+        if (s.length() == 9) {
+            score += 7;
+        }
     }
 
     /**

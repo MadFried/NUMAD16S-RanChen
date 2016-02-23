@@ -42,14 +42,14 @@
             android:name=".asn1.MeActivity"
             android:label="@string/about_label" />
         <activity
-            android:name=".asn5.NewGame"
-            android:label="@string/title_activity_new_game" />
-        <activity
             android:name=".scraggle.NewGameActivity"
             android:label="@string/title_activity_new_game" />
         <activity
             android:name=".scraggle.PauseGame"
-            android:label="@string/title_activity_pause_game"></activity>
+            android:label="@string/title_activity_pause_game" />
+        <activity
+            android:name=".scraggle.PhaseTwo"
+            android:label="@string/title_activity_phase_two"></activity>
     </application>
 
 </manifest>

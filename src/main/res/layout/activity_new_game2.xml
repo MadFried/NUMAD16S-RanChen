@@ -138,6 +138,26 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="25dp" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:id = "@+id/submit_button"
+        android:textStyle="bold|italic"
+        android:text="Submit"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/clear_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="59dp"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:id = "@+id/phaseTwo_button"
+        android:text="PhaseTwo"
+        android:textStyle="bold|italic"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"/>
+
     <ListView
         android:layout_width="100dp"
         android:layout_height="30dp"
@@ -163,6 +183,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="0dp"/>
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -173,6 +194,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="0dp"
          />
+
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="30dp"
