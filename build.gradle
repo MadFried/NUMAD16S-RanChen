@@ -17,8 +17,8 @@ android {
         applicationId "edu.neu.madcourse.ranchen"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 5
-        versionName "1.4"
+        versionCode 8
+        versionName "1.7"
     }
 
     buildTypes {

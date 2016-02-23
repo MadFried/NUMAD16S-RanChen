@@ -134,9 +134,9 @@
         android:id="@+id/oops_button"
         android:textStyle="bold|italic"
         android:text="Clear"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="25dp" />
+        android:layout_toRightOf="@+id/submit_button"
+        android:layout_toEndOf="@+id/submit_button" />
 
     <Button
         android:layout_width="wrap_content"
@@ -144,26 +144,25 @@
         android:id = "@+id/submit_button"
         android:textStyle="bold|italic"
         android:text="Submit"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@+id/clear_button"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="59dp"
-        />
+        android:layout_above="@+id/oops_button"
+        android:layout_centerHorizontal="true" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:id = "@+id/phaseTwo_button"
         android:text="PhaseTwo"
         android:textStyle="bold|italic"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"/>
+        android:layout_alignTop="@+id/submit_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ListView
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:id="@+id/list_view"
-        android:layout_above="@+id/mute_box"
-        android:layout_alignParentLeft="true">
+        android:layout_above="@+id/oops_button"
+        android:layout_toRightOf="@+id/submit_button"
+        android:layout_toEndOf="@+id/submit_button">
     </ListView>
 
     <ProgressBar

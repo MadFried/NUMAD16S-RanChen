@@ -266,17 +266,29 @@ public class NewGameActivity extends Activity {
 
         private void startNewGame() {
             clearSelections();
-            pickLetters();
-       /* dic = wordBuilder.getDictionary();
+            //pickLetters();
+            ArrayList<String> dic;
+        /*dic = wordBuilder.getDictionary();
 
-            for (String s : dic) {
+            for (Iterator<String> iterator = dic.iterator(); iterator.hasNext();) {
+                String s  = iterator.next();
                 if (s.length() == 9) {
+                    iterator.remove();
                     temp.add(s);
                 }
             }*/
+            ArrayList<String> receiveDictionary = wordBuilder.getDictionary();
+            ArrayList<String> temp = new ArrayList<>();
+            for (int i = 0; i < receiveDictionary.size(); i++) {
+                String s  = receiveDictionary.get(i);
+                if(s.length() == 9) {
+                    temp.add(s);
+                }
+            }
             for (int i = 0; i < 9; i++) {
                 int x = Math.abs(new Random().nextInt(temp.size()));
-                scrambleList.add(temp.get(x));
+                String NineChar = temp.get(x);
+                scrambleList.add(NineChar);
                 //scrambleList.add(temp.remove(Math.abs(new Random().nextInt()) % temp.size()));
                 String s = scrambleList.get(i);
                 char a[] = s.toCharArray();
