@@ -25,8 +25,8 @@ public class LetterButtonTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        if (!wordBuilder.isLoaded())
-            return false;
+//        if (!wordBuilder.isLoaded())
+//            return false;
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             LetterButton source = (LetterButton) view;
             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);

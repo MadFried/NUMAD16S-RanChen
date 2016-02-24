@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.media.MediaPlayer;
@@ -25,6 +26,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -84,6 +89,8 @@ public class NewGameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game2);
+
+        readNineWords();
 
         preferences = this.getSharedPreferences("edu.neu.madcourse.ranchen.scraggle", Context.MODE_PRIVATE);
 
@@ -264,27 +271,17 @@ public class NewGameActivity extends Activity {
          * Start a new game, clearing the list of found words and resetting the board.
          */
 
-        private void startNewGame() {
+        /*private void startNewGame() {
             clearSelections();
-            //pickLetters();
-            ArrayList<String> dic;
-        /*dic = wordBuilder.getDictionary();
-
-            for (Iterator<String> iterator = dic.iterator(); iterator.hasNext();) {
-                String s  = iterator.next();
-                if (s.length() == 9) {
-                    iterator.remove();
-                    temp.add(s);
-                }
-            }*/
-            ArrayList<String> receiveDictionary = wordBuilder.getDictionary();
-            ArrayList<String> temp = new ArrayList<>();
-            for (int i = 0; i < receiveDictionary.size(); i++) {
-                String s  = receiveDictionary.get(i);
-                if(s.length() == 9) {
-                    temp.add(s);
-                }
-            }
+            //readNineWords();
+//            ArrayList<String> receiveDictionary = wordBuilder.getDictionary();
+//            ArrayList<String> temp = new ArrayList<>();
+//            for (int i = 0; i < receiveDictionary.size(); i++) {
+//                String s  = receiveDictionary.get(i);
+//                if(s.length() == 9) {
+//                    temp.add(s);
+//                }
+//            }
             for (int i = 0; i < 9; i++) {
                 int x = Math.abs(new Random().nextInt(temp.size()));
                 String NineChar = temp.get(x);
@@ -301,53 +298,55 @@ public class NewGameActivity extends Activity {
             }
             wordBuilder.clearWord();
             wordListAdapter.clear();
-        }
+        }*/
 
-       /* private void startNewGame() {
+
+        private void startNewGame() {
             clearSelections();
-            pickLetters();
-       *//* dic = wordBuilder.getDictionary();
-
-            for (String s : dic) {
-                if (s.length() == 9) {
-                    temp.add(s);
-                }
-            }*//*
             int y = Math.abs(new Random().nextInt(8));
-
             for (int i = 0; i < 9; i++) {
                 int x = Math.abs(new Random().nextInt(temp.size()));
-                scrambleList.add(temp.get(x));
+                String NineChar = temp.get(x);
+                scrambleList.add(NineChar);
                 //scrambleList.add(temp.remove(Math.abs(new Random().nextInt()) % temp.size()));
                 String s = scrambleList.get(i);
                 char a[] = s.toCharArray();
                 char c = a[0];
                 LetterButton source = buttons[i][y];
                 source.setText(String.valueOf(c));
-                for (int j = 0; j < 9; j++) {
-                    LetterButton next = buttons[i][j];
-                   if ((Math.abs(source.x - next.x) == 0 && Math.abs(source.y - next.y) == 1) ||
-                            (Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 0) ||
-                            (Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 1)) {
-                        char d = a[++j];
-                        next.setText(String .valueOf(d));
-                        source = next;
+                int n = 0;
+                    while(n < 10) {
+                        for (int j = 0; j < 9; j++) {
+                        LetterButton next = buttons[i][j];
+                            if (next.getText() != null) {
+                                next = buttons[i][j++];
+                            }
+
+                            if (next.getText() == null || !(Math.abs(source.x - next.x) == 0 && Math.abs(source.y - next.y) == 1) ||
+                                    !(Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 0) ||
+                                    !(Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 1)) {
+                                next = buttons[i][j++];
+                            }
+                            if (next.getText() == null || (Math.abs(source.x - next.x) == 0 && Math.abs(source.y - next.y) == 1) ||
+                                    (Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 0) ||
+                                    (Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 1)) {
+                                char d = a[++n];
+                                next.setText(String.valueOf(d));
+                                source = next;
+                            }
                     }
+                    /*if((Math.abs(source.x  - next.x) == 0 && Math.abs(source.y  - next.y) == 1) ||
+                            (Math.abs(source.x  - next.x) == 1 && Math.abs(source.y - next.y) == 0) ||
+                            (Math.abs(source.x  - next.x) ==1 && Math.abs(source.y - next.y) ==1)){
+                        char d = a[++j];
+                        next.setText(String.valueOf(d));
+                        source = next;
+                        }*/
                 }
             }
             wordBuilder.clearWord();
             wordListAdapter.clear();
-        }*/
-
-    private void pickLetters() {
-        ArrayList<String> receiveDictionary = wordBuilder.getDictionary();
-
-        for (String s : receiveDictionary) {
-            if(s.length() == 9) {
-                temp.add(s);
-            }
         }
-    }
 
     /**
      * Clears all selected letters
@@ -468,6 +467,24 @@ public class NewGameActivity extends Activity {
 
             // update textview with remaining time
             txtTimer.setText(minute+":"+second);
+        }
+    }
+
+    public void readNineWords() {
+        BufferedReader reader = null;
+        AssetManager assetManager = getResources().getAssets() ;
+        InputStream inputStream = null;
+
+        try {
+            inputStream = assetManager.open("NineWords");
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            reader = new BufferedReader(inputStreamReader, 1024);
+            String receiveString = null;
+            while ((receiveString = reader.readLine()) != null) {
+                temp.add(receiveString);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
