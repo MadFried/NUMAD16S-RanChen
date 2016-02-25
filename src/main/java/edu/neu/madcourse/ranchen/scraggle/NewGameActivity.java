@@ -11,27 +11,21 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
 import edu.neu.madcourse.ranchen.R;
@@ -79,8 +73,15 @@ public class NewGameActivity extends Activity {
         return phaseTwoString;
     }
 
-    private String phaseTwoString = null;
+    private String phaseTwoString;
 
+    private TextView textView;
+
+    private GridLayout grid;
+
+    int n = 1;
+
+    ArrayList<LetterButton> selectedWords = new ArrayList<>();
 
 
 
@@ -90,7 +91,10 @@ public class NewGameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game2);
 
+
         readNineWords();
+
+        textView = (TextView)findViewById(R.id.scoreboard);
 
         preferences = this.getSharedPreferences("edu.neu.madcourse.ranchen.scraggle", Context.MODE_PRIVATE);
 
@@ -103,7 +107,17 @@ public class NewGameActivity extends Activity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               /* textView.setText("" + score);
+                letterButtonListener.previouslyPressed = null;
+                wordBuilder.clearWord();*/
                 submitSelections();
+                if (n < 9) {
+                    for (int i = 0; i < 9; i++) {
+                        LetterButton b = buttons[n][i];
+                        b.setOnTouchListener(letterButtonListener);
+                    }
+                    n++;
+                }
             }
         });
 
@@ -119,6 +133,7 @@ public class NewGameActivity extends Activity {
                     Intent intent = new Intent();
                     intent.setClass(NewGameActivity.this, PhaseTwo.class);
                     startActivity(intent);
+                    Log.d("PhaseTwo", ""+phaseTwoString);
                 }
             }
         });
@@ -167,7 +182,7 @@ public class NewGameActivity extends Activity {
             int quaterScreenSize = (int)(halfScreenSize * 0.2);
 
             for (int i=0; i < 9; i++) {
-                GridLayout grid = (GridLayout)findViewById(GridIds[i]) ;
+                grid = (GridLayout)findViewById(GridIds[i]) ;
                 for(int j= 0; j < 9; j++) {
                     GridLayout.LayoutParams all = new GridLayout.LayoutParams();
                     all.width = quaterScreenSize;
@@ -177,14 +192,16 @@ public class NewGameActivity extends Activity {
                     newButton.setLayoutParams(all);
                     grid.addView(newButton, all);
                     newButton.setBackgroundColor(LETTER_BUTTON_BACKGROUND);
-                    newButton.setOnTouchListener(letterButtonListener);
+                    //newButton.setOnTouchListener(letterButtonListener);
+                    buttons[0][j].setOnTouchListener(letterButtonListener);
                 }
             }
 
         //show score
-        String scr = String.valueOf(score);
+       /* String scr = String.valueOf(score);
+        Log.d("score", scr);
         TextView textView = (TextView)findViewById(R.id.scoreboard);
-        textView.setText(String.valueOf(scr));
+        textView.setText(String.valueOf(scr));*/
 
 
         if (preferences.getString(String.valueOf(0), null) == null) {
@@ -271,7 +288,7 @@ public class NewGameActivity extends Activity {
          * Start a new game, clearing the list of found words and resetting the board.
          */
 
-        /*private void startNewGame() {
+        private void startNewGame() {
             clearSelections();
             //readNineWords();
 //            ArrayList<String> receiveDictionary = wordBuilder.getDictionary();
@@ -298,12 +315,13 @@ public class NewGameActivity extends Activity {
             }
             wordBuilder.clearWord();
             wordListAdapter.clear();
-        }*/
+        }
 
 
-        private void startNewGame() {
+       /* private void startNewGame() {
             clearSelections();
             int y = Math.abs(new Random().nextInt(8));
+            int z = 0;
             for (int i = 0; i < 9; i++) {
                 int x = Math.abs(new Random().nextInt(temp.size()));
                 String NineChar = temp.get(x);
@@ -315,38 +333,49 @@ public class NewGameActivity extends Activity {
                 LetterButton source = buttons[i][y];
                 source.setText(String.valueOf(c));
                 int n = 0;
-                    while(n < 10) {
-                        for (int j = 0; j < 9; j++) {
-                        LetterButton next = buttons[i][j];
-                            if (next.getText() != null) {
-                                next = buttons[i][j++];
-                            }
-
+                for (int j = 0; j < 9; j++) {
+                    LetterButton next = buttons[i][j];
+//                            if (next.getText() != null) {
+//
+//                            }
+*//*
                             if (next.getText() == null || !(Math.abs(source.x - next.x) == 0 && Math.abs(source.y - next.y) == 1) ||
                                     !(Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 0) ||
                                     !(Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 1)) {
-                                next = buttons[i][j++];
-                            }
-                            if (next.getText() == null || (Math.abs(source.x - next.x) == 0 && Math.abs(source.y - next.y) == 1) ||
+                                char d = a[++n];
+                                next.setText(String.valueOf(d));
+                                source = next;
+                            }*//*
+                    if (next.getText() == null || (Math.abs(source.x - next.x) == 0 && Math.abs(source.y - next.y) == 1) ||
                                     (Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 0) ||
                                     (Math.abs(source.x - next.x) == 1 && Math.abs(source.y - next.y) == 1)) {
                                 char d = a[++n];
                                 next.setText(String.valueOf(d));
                                 source = next;
-                            }
+                                Log.d("n的值", ""+n);
                     }
-                    /*if((Math.abs(source.x  - next.x) == 0 && Math.abs(source.y  - next.y) == 1) ||
+                }
+                z = n;
+                Log.d("youzhima", ""+z);
+
+                for (int m = 0; m < 9; m++) {
+                    if (buttons[i][m].getText() == null) {
+                        char w = a[++z];
+                        buttons[i][m].setText(String.valueOf(w));
+                    }
+                }
+
+                   *//* if((Math.abs(source.x  - next.x) == 0 && Math.abs(source.y  - next.y) == 1) ||
                             (Math.abs(source.x  - next.x) == 1 && Math.abs(source.y - next.y) == 0) ||
                             (Math.abs(source.x  - next.x) ==1 && Math.abs(source.y - next.y) ==1)){
                         char d = a[++j];
                         next.setText(String.valueOf(d));
                         source = next;
-                        }*/
-                }
+                        }*//*
             }
             wordBuilder.clearWord();
             wordListAdapter.clear();
-        }
+        }*/
 
     /**
      * Clears all selected letters
@@ -364,17 +393,42 @@ public class NewGameActivity extends Activity {
 
     public void submitSelections() {
         if(letterButtonListener.previouslyPressed != null) {
-            addScore(wordBuilder.getWordInProgress());
-            letterButtonListener.previouslyPressed = null;
+           if(wordBuilder.getDictionary().contains(wordBuilder.getWordInProgress())) {
+                addScore(wordBuilder.getWordInProgress());
+                Log.d("21321313", wordBuilder.getWordInProgress());
+                letterButtonListener.previouslyPressed = null;
+//              String scr = String.valueOf(score);
+                Log.d("score", "" + score);
+                textView.setText("" + score);
+               for(int i = 0; i < 9; i++) {
+                   for (int j = 0; j < 9; j++) {
+                       LetterButton b = buttons[i][j];
+                       if (b.buttonSelected) {
+                           selectedWords.add(b);
+                           b.setBackgroundColor(LETTER_BUTTON_BACKGROUND);
+                           b.buttonSelected = false;
+                       }
+                   }
+               }
+            }
         }
         wordBuilder.clearWord();
     }
 
     public void phaseTwo() {
-        for(int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                LetterButton b = buttons[i][j];
-                if(b.buttonSelected == true) {
+                for (int x = 0; x < selectedWords.size(); x++) {
+                  final LetterButton  b = selectedWords.get(x);
+                    b.setBackgroundColor(Color.RED);
+                    b.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            b.setBackgroundColor(Color.rgb(0, 163, 131));
+                            sb.append(b.getText().charAt(0));
+                            phaseTwoString = sb.toString();
+                        }
+                    });
+                }
+               /* if(b.buttonSelected) {
                     LetterButton nButton = b;
                     nButton.buttonSelected = false;
                     nButton.setOnClickListener(new View.OnClickListener() {
@@ -386,9 +440,7 @@ public class NewGameActivity extends Activity {
                             phaseTwoString = sb.toString();
                         }
                     });
-                }
-            }
-        }
+                }*/
     }
 
 //add score

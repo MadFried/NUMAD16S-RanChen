@@ -19,6 +19,8 @@ public class LetterButtonTouchListener implements View.OnTouchListener {
 
     WordBuilder wordBuilder;
 
+    public final static int LETTER_BUTTON_BACKGROUND = Color.rgb(144, 239, 226);
+
     public LetterButtonTouchListener(WordBuilder builder) {
         wordBuilder = builder;
     }
@@ -31,6 +33,9 @@ public class LetterButtonTouchListener implements View.OnTouchListener {
             LetterButton source = (LetterButton) view;
             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
             if (source.buttonSelected)
+//                source.setBackgroundColor(LETTER_BUTTON_BACKGROUND);
+//                source.buttonSelected = false;
+//                source = previouslyPressed;
                 return false;
             if (previouslyPressed == null ||
                     (Math.abs(previouslyPressed.x - source.x) == 0 && Math.abs(previouslyPressed.y - source.y) == 1) ||

@@ -95,6 +95,7 @@ public class WordBuilder {
             read(wordInProgress.substring(0, 2).toUpperCase());
             if (dictionary.contains(wordInProgress) && !(output.getPosition(wordInProgress) >= 0)) {
                 sendCurrentWord();
+                //parent.addScore(wordInProgress);
                 //parent.clearSelections();
             }
         }
