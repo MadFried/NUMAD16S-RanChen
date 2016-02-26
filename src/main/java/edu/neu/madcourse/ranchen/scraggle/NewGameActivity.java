@@ -45,6 +45,7 @@ public class NewGameActivity extends Activity {
     SharedPreferences preferences;
 
     LetterButtonTouchListener letterButtonListener;
+    ReuseButtonTouchListener reuseButtonTouchListener;
 
     Handler handler = new Handler();
 
@@ -67,19 +68,22 @@ public class NewGameActivity extends Activity {
     ArrayList<String> scrambleList = new ArrayList<>();
     ArrayList<String> temp = new ArrayList<>();
 
-    StringBuilder sb = new StringBuilder();
+    private String phaseTwoString = null;
 
     public String getPhaseTwoString() {
         return phaseTwoString;
     }
 
-    private String phaseTwoString;
+    public void setPhaseTwoString(String phaseTwoString) {
+        this.phaseTwoString = phaseTwoString;
+    }
 
     private TextView textView;
 
     private GridLayout grid;
 
     int n = 1;
+    int m = 0;
 
     ArrayList<LetterButton> selectedWords = new ArrayList<>();
 
@@ -107,17 +111,10 @@ public class NewGameActivity extends Activity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* textView.setText("" + score);
+                /*textView.setText("" + score);
                 letterButtonListener.previouslyPressed = null;
                 wordBuilder.clearWord();*/
                 submitSelections();
-                if (n < 9) {
-                    for (int i = 0; i < 9; i++) {
-                        LetterButton b = buttons[n][i];
-                        b.setOnTouchListener(letterButtonListener);
-                    }
-                    n++;
-                }
             }
         });
 
@@ -132,6 +129,7 @@ public class NewGameActivity extends Activity {
                 }else {
                     Intent intent = new Intent();
                     intent.setClass(NewGameActivity.this, PhaseTwo.class);
+                    intent.putExtra("arg", phaseTwoString);
                     startActivity(intent);
                     Log.d("PhaseTwo", ""+phaseTwoString);
                 }
@@ -179,7 +177,7 @@ public class NewGameActivity extends Activity {
             int screenWidth = size.x;
             int screenHeight = size.y;
             int halfScreenSize = (int)(screenWidth * 0.5);
-            int quaterScreenSize = (int)(halfScreenSize * 0.2);
+            int quaterScreenSize = (int)(halfScreenSize * 0.21);
 
             for (int i=0; i < 9; i++) {
                 grid = (GridLayout)findViewById(GridIds[i]) ;
@@ -394,6 +392,19 @@ public class NewGameActivity extends Activity {
     public void submitSelections() {
         if(letterButtonListener.previouslyPressed != null) {
            if(wordBuilder.getDictionary().contains(wordBuilder.getWordInProgress())) {
+               if (n < 9) {
+                   for (int i = 0; i < 9; i++) {
+                       LetterButton b = buttons[n][i];
+                       b.setOnTouchListener(letterButtonListener);
+                   }
+                   for (int j = 0; j < 9; j++) {
+                       LetterButton b = buttons[m][j];
+                       b.setOnTouchListener(null);
+                   }
+                   n++;
+                   m++;
+               }
+
                 addScore(wordBuilder.getWordInProgress());
                 Log.d("21321313", wordBuilder.getWordInProgress());
                 letterButtonListener.previouslyPressed = null;
@@ -416,14 +427,18 @@ public class NewGameActivity extends Activity {
     }
 
     public void phaseTwo() {
+                final StringBuilder sb = new StringBuilder();
                 for (int x = 0; x < selectedWords.size(); x++) {
                   final LetterButton  b = selectedWords.get(x);
+                    b.buttonSelected = false;
                     b.setBackgroundColor(Color.RED);
+                    b.setOnTouchListener(null);
                     b.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             b.setBackgroundColor(Color.rgb(0, 163, 131));
-                            sb.append(b.getText().charAt(0));
+                            b.buttonSelected = true;
+                            sb.append(b.getText());
                             phaseTwoString = sb.toString();
                         }
                     });

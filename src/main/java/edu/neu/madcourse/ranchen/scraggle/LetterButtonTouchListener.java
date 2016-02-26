@@ -19,6 +19,8 @@ public class LetterButtonTouchListener implements View.OnTouchListener {
 
     WordBuilder wordBuilder;
 
+    NewGameActivity parent;
+
     public final static int LETTER_BUTTON_BACKGROUND = Color.rgb(144, 239, 226);
 
     public LetterButtonTouchListener(WordBuilder builder) {
@@ -53,6 +55,4 @@ public class LetterButtonTouchListener implements View.OnTouchListener {
         }
         return true;
     }
-
-
 }

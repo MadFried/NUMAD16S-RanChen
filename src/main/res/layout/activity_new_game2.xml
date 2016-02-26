@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@drawable/sandy_beach"/>
+        android:src="@drawable/sand"/>
 
 
     <GridLayout android:id="@+id/grid_layout"
@@ -130,7 +130,8 @@
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="28dp"
+        android:textSize="10dp"
         android:id="@+id/oops_button"
         android:textStyle="bold|italic"
         android:text="Clear"
@@ -140,15 +141,18 @@
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
         android:id = "@+id/submit_button"
+        android:textSize="10dp"
         android:textStyle="bold|italic"
         android:text="Submit"
         android:layout_above="@+id/oops_button"
+        android:layout_marginBottom="0dp"
         android:layout_centerHorizontal="true" />
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="30dp"
+        android:textSize="10dp"
         android:id = "@+id/phaseTwo_button"
         android:text="PhaseTwo"
         android:textStyle="bold|italic"
@@ -158,11 +162,15 @@
 
     <ListView
         android:layout_width="100dp"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
+        android:background="#fafafa"
         android:id="@+id/list_view"
         android:layout_above="@+id/oops_button"
         android:layout_toRightOf="@+id/submit_button"
-        android:layout_toEndOf="@+id/submit_button">
+        android:layout_toEndOf="@+id/submit_button"
+        android:textStyle = "bold"
+        android:textSize = "40dp"
+        android:textColor = "@color/blue_color">
     </ListView>
 
     <TextView
