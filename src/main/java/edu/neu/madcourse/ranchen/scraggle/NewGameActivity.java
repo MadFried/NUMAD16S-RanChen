@@ -130,6 +130,8 @@ public class NewGameActivity extends Activity {
                     Intent intent = new Intent();
                     intent.setClass(NewGameActivity.this, PhaseTwo.class);
                     intent.putExtra("arg", phaseTwoString);
+                    intent.putExtra("score",score);
+                    intent.putExtra("remainTime",remainMilli);
                     startActivity(intent);
                     Log.d("PhaseTwo", ""+phaseTwoString);
                 }

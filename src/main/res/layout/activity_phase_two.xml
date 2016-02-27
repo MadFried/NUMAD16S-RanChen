@@ -9,6 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.neu.madcourse.ranchen.scraggle.PhaseTwo">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/flower"
+        android:id="@+id/imageView" />
+
     <GridLayout android:id="@+id/phasetwo_grid_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,5 +27,57 @@
     </GridLayout>
 
 
+<ScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/scrollView2">
+
+</ScrollView>
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:id="@+id/PhaseTwolist_view"
+        android:textStyle = "bold"
+        android:textSize = "20dp"
+        android:textColor = "@color/red_color"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_toLeftOf="@+id/nscoreboard"
+        android:layout_toStartOf="@+id/nscoreboard">
+    </TextView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:textSize="10dp"
+        android:id="@+id/oops_button"
+        android:textStyle="bold|italic"
+        android:text="Clear"
+        android:layout_alignBaseline="@+id/PhaseTwolist_view"
+        android:layout_alignBottom="@+id/PhaseTwolist_view"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nscoreboard"
+        android:text="0"
+        android:textSize="30dp"
+        android:textColor="@color/blue_color"
+        android:layout_below="@+id/timer"
+        android:layout_alignRight="@+id/imageView"
+        android:layout_alignEnd="@+id/imageView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timer"
+        android:text="00:00"
+        android:textColor="@color/red_color"
+        android:layout_above="@+id/scoreboard"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="0dp"
+        />
 
 </RelativeLayout>

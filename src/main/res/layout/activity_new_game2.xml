@@ -130,7 +130,7 @@
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
+        android:layout_height="30dp"
         android:textSize="10dp"
         android:id="@+id/oops_button"
         android:textStyle="bold|italic"
@@ -162,8 +162,7 @@
 
     <ListView
         android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:background="#fafafa"
+        android:layout_height="35dp"
         android:id="@+id/list_view"
         android:layout_above="@+id/oops_button"
         android:layout_toRightOf="@+id/submit_button"
