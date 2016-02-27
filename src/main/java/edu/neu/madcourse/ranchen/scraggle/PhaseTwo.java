@@ -37,6 +37,7 @@ public class PhaseTwo extends Activity {
     boolean isRunning=false;
     int score;
     TextView scoreButton;
+    ArrayList<String> output = new ArrayList<>();
 
 
     @Override
@@ -107,10 +108,11 @@ public class PhaseTwo extends Activity {
                         Log.d("result", result);
                         if (result.length() >= 2) {
                             read(result.substring(0, 2).toUpperCase());
-                            if (dictionary.contains(result)) {
+                            if (dictionary.contains(result) && !(output.indexOf(result) >= 0)) {
+                                output.add(result);
                                 textView.append("\n" + result);
                                 addScore(result);
-                                scoreButton.setText(""+score);
+                                scoreButton.setText("" + score);
                                 clearSelections();
                                 clearWord();
                             }
@@ -238,5 +240,6 @@ public class PhaseTwo extends Activity {
             score += 7;
         }
     }
+
 
 }
