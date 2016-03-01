@@ -30,21 +30,21 @@
 <ScrollView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/scrollView2">
-
-</ScrollView>
+    android:id="@+id/scrollView2"
+    android:layout_centerHorizontal="true"
+    android:layout_below="@+id/phasetwo_grid_layout">
 
     <TextView
-        android:layout_width="200dp"
-        android:layout_height="80dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/PhaseTwolist_view"
         android:textStyle = "bold"
         android:textSize = "20dp"
-        android:textColor = "@color/red_color"
-        android:layout_alignBottom="@+id/imageView"
-        android:layout_toLeftOf="@+id/nscoreboard"
-        android:layout_toStartOf="@+id/nscoreboard">
+        android:textColor = "@color/red_color">
     </TextView>
+
+</ScrollView>
+
 
     <Button
         android:layout_width="wrap_content"
@@ -53,10 +53,10 @@
         android:id="@+id/oops_button"
         android:textStyle="bold|italic"
         android:text="Clear"
-        android:layout_alignBaseline="@+id/PhaseTwolist_view"
-        android:layout_alignBottom="@+id/PhaseTwolist_view"
+        android:layout_alignBottom="@+id/imageView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="77dp" />
 
     <TextView
         android:layout_width="wrap_content"
