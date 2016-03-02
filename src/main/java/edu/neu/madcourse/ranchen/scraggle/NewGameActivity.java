@@ -143,6 +143,7 @@ public class NewGameActivity extends Activity {
         mTimer = new MyTimer(finishTime*1000,1000);
         mTimer.start();
 
+
         //mute box
         final CheckBox muteCheckBox = (CheckBox) findViewById(R.id.mute_box);
         muteCheckBox.setOnClickListener(new View.OnClickListener() {

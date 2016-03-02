@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import edu.neu.madcourse.ranchen.communication.Communication;
 import edu.neu.madcourse.ranchen.scraggle.NewGameActivity;
 import edu.neu.madcourse.ranchen.utt.MainActivity;
 import edu.neu.madcourse.ranchen.R;
@@ -35,6 +36,15 @@ public class aboutMeActivityFragment extends Fragment {
         View errorButton = rootView.findViewById(R.id.error_button);
         View dictButton = rootView.findViewById(R.id.dictionary_button);
         View newGameButton = rootView.findViewById(R.id.newgame_button);
+        View communicationButton = rootView.findViewById(R.id.communication_button);
+
+        communicationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), Communication.class);
+                getActivity().startActivity(intent);
+            }
+        });
 
         errorButton.setOnClickListener(new View.OnClickListener() {
             @Override
