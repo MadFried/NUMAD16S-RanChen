@@ -34,8 +34,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/submit_button"
         android:textSize="12dp"
-        android:onClick="submit"
         android:text="Submit"
         android:layout_marginTop="51dp"
         android:layout_below="@+id/linearLayout"

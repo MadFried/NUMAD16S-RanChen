@@ -22,7 +22,7 @@
             android:textStyle="bold"
             android:textSize="14sp"/>
 
-        <EditText
+        <TextView
             android:id="@+id/cognitoplayerNameEditText"
             android:layout_width="0dp"
             android:layout_weight="1"
