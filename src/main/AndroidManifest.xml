@@ -16,8 +16,16 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <permission
+        android:name="edu.neu.madcourse.ranchen.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="edu.neu.madcourse.ranchen.permission.C2D_MESSAGE" />
 
 
     <application
@@ -66,6 +74,18 @@
         <activity
             android:name=".communication.RegistedList"
             android:label="@string/title_activity_registed_list"></activity>
+
+        <receiver
+            android:name=".communication.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="edu.neu.madcourse.ranchen" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".communication.GcmIntentService" />
     </application>
 
 </manifest>

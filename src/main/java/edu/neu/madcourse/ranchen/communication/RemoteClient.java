@@ -74,6 +74,7 @@ public class RemoteClient {
     public String getValue(String key)
     {
         return fireBaseData.get(key);
+
     }
 
     public void fetchValue(String key) {

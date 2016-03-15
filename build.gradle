@@ -19,6 +19,7 @@ android {
         targetSdkVersion 22
         versionCode 13
         versionName "2.0"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -37,9 +38,7 @@ android {
 }
 dependencies {
     compile 'com.android.support:support-v4:22.+'
-    compile files('libs/madcourse-cognito-core.jar')
-    compile files('libs/aws-android-sdk-core-2.2.13.jar')
-    compile files('libs/aws-android-sdk-cognito-2.2.13.jar')
+    compile 'com.google.android.gms:play-services:8.3.0'
     compile files('libs/firebase-client-android-2.5.2.jar')
 }
 
