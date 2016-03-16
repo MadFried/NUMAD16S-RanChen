@@ -33,7 +33,7 @@ public class Communication extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(Communication.this, CommunicationTest.class);
+                intent.setClass(Communication.this, RegistedList.class);
                 startActivity(intent);
             }
         });

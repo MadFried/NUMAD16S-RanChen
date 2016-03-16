@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Handler;
@@ -67,7 +68,7 @@ public class RegistedList extends Activity {
     GoogleCloudMessaging gcm;
     Context context;
     String regid;
-    String findPlayerName;
+    private String findPlayerName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +90,13 @@ public class RegistedList extends Activity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkPlayServices()) {
+              /*  if (checkPlayServices()) {
                     regid = getRegistrationId(context);
                     if (TextUtils.isEmpty(regid)) {
                         registerInBackground();
                     }
-                }
+                }*/
+                registerInBackground();
                 remoteClient.saveValue(playerName.getText().toString(), regid);
                 remoteClient.fetchValue(playerName.getText().toString());
             }
@@ -109,16 +111,24 @@ public class RegistedList extends Activity {
                     Toast.makeText(context, "Sending Message Empty!", Toast.LENGTH_LONG).show();
                     return;
                 }
+                findPlayerName = getPlayerName.getText().toString();
+                Log.d("youmiyou", findPlayerName);
+                remoteClient.fetchValue(findPlayerName);
                 sendMessage(message);
             }
         });
+
 
         Firebase ref = new Firebase(FIREBASE_DB);
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                System.out.println(snapshot.getValue().toString());
-                cognitoPlayerName.append(snapshot.getValue().toString() + "\n");
+                //System.out.println(snapshot.getValue().toString());
+                Map<String, String> td = (HashMap<String, String>) snapshot.getValue();
+                Set<String> keys = td.keySet();
+                for(String key : keys) {
+                    cognitoPlayerName.append(key + "\n");
+                }
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -128,11 +138,10 @@ public class RegistedList extends Activity {
     }
 
     private void sendMessage(final String message) {
-        findPlayerName = playerName.getText().toString();
-        if (regid == null || regid.equals("")) {
+       /* if (regid == null || regid.equals("")) {
             Toast.makeText(this, "You must register first", Toast.LENGTH_LONG).show();
             return;
-        }
+        }*/
         if (message.isEmpty()) {
             Toast.makeText(this, "Empty Message", Toast.LENGTH_LONG).show();
             return;
@@ -143,7 +152,7 @@ public class RegistedList extends Activity {
             protected String doInBackground(Void... params) {
                 List<String> regIds = new ArrayList<String>();
                 String reg_device = remoteClient.getValue(findPlayerName);
-                Log.d("checkcheck", reg_device);
+                //Log.d("checkcheck", reg_device);
                 Map<String, String> msgParams;
                 msgParams = new HashMap<>();
                 msgParams.put("data.message", message);

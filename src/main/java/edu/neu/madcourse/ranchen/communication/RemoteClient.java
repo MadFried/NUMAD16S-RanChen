@@ -29,6 +29,7 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class RemoteClient {
 
@@ -39,8 +40,8 @@ public class RemoteClient {
     private Context mContext;
     private HashMap<String, String> fireBaseData = new HashMap<String, String>();
 
-    public HashMap<String, String> getFireBaseData() {
-        return fireBaseData;
+    public Set<String> getKeySet() {
+        return fireBaseData.keySet();
     }
 
     public RemoteClient(Context mContext)
@@ -77,6 +78,15 @@ public class RemoteClient {
 
     }
 
+    public String getKey(String value) {
+        for (String key : fireBaseData.keySet()) {
+            if(fireBaseData.get(key).equals(value)) {
+                return key;
+            }
+        }
+        return null;
+    }
+
     public void fetchValue(String key) {
 
         Log.d(TAG, "Get Value for Key - " + key);
@@ -90,10 +100,8 @@ public class RemoteClient {
                 if(snapshot.getValue() != null)
                 {
                     Log.d(TAG, "Data Received" + snapshot.getValue().toString());
-
                     // Adding the data to the HashMap
                     fireBaseData.put(snapshot.getKey(), snapshot.getValue().toString());
-
                 }
                 else {
                     Log.d(TAG, "Data Not Received");

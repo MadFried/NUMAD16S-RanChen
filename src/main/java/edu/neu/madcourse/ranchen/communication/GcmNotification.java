@@ -51,7 +51,7 @@ public class GcmNotification {
 							Toast.LENGTH_SHORT).show();
 				} else {
 					Toast.makeText(context.getApplicationContext(),
-							"message sent... notification coming",
+							"message sent... ",
 							Toast.LENGTH_SHORT).show();
 				}
 
