@@ -37,6 +37,7 @@ public class aboutMeActivityFragment extends Fragment {
         View dictButton = rootView.findViewById(R.id.dictionary_button);
         View newGameButton = rootView.findViewById(R.id.newgame_button);
         View communicationButton = rootView.findViewById(R.id.communication_button);
+        View twoPlayerButton = rootView.findViewById(R.id.two_player_button);
 
         communicationButton.setOnClickListener(new View.OnClickListener() {
             @Override

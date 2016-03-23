@@ -1,4 +1,5 @@
-package edu.neu.madcourse.ranchen.communication;
+/*
+package edu.neu.madcourse.ranchen.scraggle;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,18 +11,18 @@ import android.view.View;
 import android.widget.Button;
 
 import edu.neu.madcourse.ranchen.R;
-import edu.neu.madcourse.ranchen.scraggle.NewGameActivity;
+import edu.neu.madcourse.ranchen.communication.RegistedList;
 
-public class Communication extends Activity {
+public class HomeMenuActivity extends Activity {
     private AlertDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_communication);
+        setContentView(R.layout.activity_home_menu);
 
         Button singlePlayerButton = (Button)this.findViewById(R.id.singleP_button);
-        Button comTestButton = (Button) findViewById(R.id.communication_test_button);
+        Button twoPlayerGameButton = (Button) findViewById(R.id.two_player_game);
         Button quitButton = (Button) this.findViewById(R.id.quit_button);
         Button ackButton = (Button) this.findViewById(R.id.ack_button);
 
@@ -32,16 +33,16 @@ public class Communication extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(Communication.this, NewGameActivity.class);
+                intent.setClass(HomeMenuActivity.this, NewGameActivity.class);
                 startActivity(intent);
             }
         });
 
-        comTestButton.setOnClickListener(new View.OnClickListener() {
+        twoPlayerGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setClass(Communication.this, RegistedList.class);
+                intent.setClass(HomeMenuActivity.this, PickPlayer.class);
                 startActivity(intent);
             }
         });
@@ -72,7 +73,7 @@ public class Communication extends Activity {
                 mDialog = builder.show();
             }
         });
-
     }
 
 }
+*/

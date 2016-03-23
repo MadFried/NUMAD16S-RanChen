@@ -1,23 +1,19 @@
-package edu.neu.madcourse.ranchen.communication;
+/*
+package edu.neu.madcourse.ranchen.scraggle;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -28,19 +24,17 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Handler;
 
 import edu.neu.madcourse.ranchen.R;
+import edu.neu.madcourse.ranchen.communication.CommunicationConstants;
+import edu.neu.madcourse.ranchen.communication.RemoteClient;
 
-public class RegistedList extends Activity {
+public class PickPlayer extends Activity {
     TextView cognitoPlayerName;
     Context mContext;
 
@@ -51,13 +45,9 @@ public class RegistedList extends Activity {
     String imeistring = null;
 
     RemoteClient remoteClient;
-    final android.os.Handler handler = new android.os.Handler();
-
 
     private Button submit;
-    private Button send;
-
-    String message;
+    private Button startGameWith;
 
 
     Timer timer;
@@ -79,13 +69,12 @@ public class RegistedList extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registed_list);
+        setContentView(R.layout.activity_pick_player);
+
         context = getApplicationContext();
         gcm = GoogleCloudMessaging.getInstance(this);
 
-
         cognitoPlayerName = (TextView)findViewById(R.id.cognitoplayerNameEditText);
-        mMessage = (EditText)findViewById(R.id.message_box);
         getPlayerName = (EditText)findViewById(R.id.getPlayerName);
 
         remoteClient = new RemoteClient(this);
@@ -99,33 +88,30 @@ public class RegistedList extends Activity {
                 if (checkPlayServices()) {
                     //regid = getRegistrationId(context);
                     //if (TextUtils.isEmpty(regid)) {
-                        registerInBackground();
+                    registerInBackground();
                     //}
                 }
                 //registerInBackground();
-                //remoteClient.fetchValue(playerName.getText().toString());
+                remoteClient.saveValue(playerName.getText().toString(), regid);
+                remoteClient.fetchValue(playerName.getText().toString());
             }
         });
 
-        send = (Button) findViewById(R.id.send_message_button);
-        send.setOnClickListener(new View.OnClickListener() {
+        startGameWith = (Button) findViewById(R.id.start_game_with_button);
+        startGameWith.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(!isOnline()) {
-                    Toast.makeText(context,"Internet Failed, You Can Play Single Player mode", Toast.LENGTH_LONG).show();
-                }
-
-                message = ((EditText) findViewById(R.id.message_box)).getText().toString();
+                */
+/*String message = ((EditText) findViewById(R.id.message_box)).getText().toString();
                 if (message.equals("")) {
                     Toast.makeText(context, "Sending Message Empty!", Toast.LENGTH_LONG).show();
                     return;
-                }
+                }*//*
+
                 findPlayerName = getPlayerName.getText().toString();
                 Log.d("youmiyou", findPlayerName);
                 remoteClient.fetchValue(findPlayerName);
-                startTimer(findPlayerName);
-                //sendMessage(message);
+                sendMessage(message);
             }
         });
 
@@ -137,51 +123,15 @@ public class RegistedList extends Activity {
                 //System.out.println(snapshot.getValue().toString());
                 Map<String, String> td = (HashMap<String, String>) snapshot.getValue();
                 Set<String> keys = td.keySet();
-                String names = "";
                 for(String key : keys) {
-//                    cognitoPlayerName.append(key + "\n");
-                    names += key +"\n";
+                    cognitoPlayerName.append(key + "\n");
                 }
-                cognitoPlayerName.setText(names);
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 System.out.println("The read failed: " + firebaseError.getMessage());
             }
         });
-    }
-
-    private void sendMessage(final String message) {
-       /* if (regid == null || regid.equals("")) {
-            Toast.makeText(this, "You must register first", Toast.LENGTH_LONG).show();
-            return;
-        }*/
-        if (message.isEmpty()) {
-            Toast.makeText(this, "Empty Message", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                List<String> regIds = new ArrayList<String>();
-                String reg_device = remoteClient.getValue(findPlayerName);
-                //Log.d("checkcheck", reg_device);
-                Map<String, String> msgParams;
-                msgParams = new HashMap<>();
-                msgParams.put("data.message", message);
-                GcmNotification gcmNotification = new GcmNotification();
-                regIds.clear();
-                regIds.add(reg_device);
-                gcmNotification.sendNotification(msgParams, regIds,RegistedList.this);
-                return "Message Sent - " + message;
-            }
-
-            @Override
-            protected void onPostExecute(String msg) {
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-            }
-        }.execute(null, null, null);
     }
 
     private String getRegistrationId(Context context) {
@@ -203,7 +153,7 @@ public class RegistedList extends Activity {
     }
 
     private SharedPreferences getGCMPreferences(Context context) {
-        return getSharedPreferences(RegistedList.class.getSimpleName(), Context.MODE_PRIVATE);
+        return getSharedPreferences(PickPlayer.class.getSimpleName(), Context.MODE_PRIVATE);
     }
 
     private static int getAppVersion(Context context) {
@@ -241,7 +191,6 @@ public class RegistedList extends Activity {
             @Override
             protected void onPostExecute(String msg) {
                 Log.d(TAG, msg);
-                remoteClient.saveValue(playerName.getText().toString(), regid);
                 //mDisplay.append(msg + "\n");
             }
         }.execute(null, null, null);
@@ -295,8 +244,10 @@ public class RegistedList extends Activity {
             protected void onPostExecute(String msg) {
                 removeRegistrationId(getApplicationContext());
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-				/*((TextView) findViewById(R.id.communication_display))
-						.setText(regid);*/
+				*/
+/*((TextView) findViewById(R.id.communication_display))
+						.setText(regid);*//*
+
             }
         }.execute();
     }
@@ -311,53 +262,6 @@ public class RegistedList extends Activity {
         editor.commit();
         regid = null;
     }
-
-    public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-    public void startTimer(String key) {
-        //set a new Timer
-        timer = new Timer();
-        //initialize the TimerTask's job
-        initializeTimerTask(key);
-        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
-        // The values can be adjusted depending on the performance
-        timer.schedule(timerTask, 5000, 1000);
-    }
-
-    public void stoptimertask() {
-        //stop the timer, if it's not already null
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
-    }
-
-    public void initializeTimerTask(final String key) {
-        timerTask = new TimerTask() {
-            public void run() {
-                Log.d(TAG, "isDataFetched >>>>" + remoteClient.isDataFetched());
-                if(remoteClient.isDataFetched())
-                {
-                    handler.post(new Runnable() {
-
-                        public void run() {
-                            sendMessage(message);
-                        }
-                    });
-
-                    stoptimertask();
-                }
-
-            }
-        };
-    }
-
-
-
-
 }
+
+*/

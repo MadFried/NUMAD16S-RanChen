@@ -65,4 +65,6 @@ both sides in the larger game.
     <string name="send_message_text">Sending Message</string>
     <string name="title_activity_user_registration">UserRegistration</string>
     <string name="title_activity_registed_list">RegistedList</string>
+    <string name="title_activity_home_menu">HomeMenuActivity</string>
+    <string name="title_activity_pick_player">PickPlayer</string>
 </resources>
