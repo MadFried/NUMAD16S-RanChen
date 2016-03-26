@@ -1,5 +1,4 @@
-/*
-package edu.neu.madcourse.ranchen.scraggle;
+package edu.neu.madcourse.ranchen.twoPlayerScraggle;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import edu.neu.madcourse.ranchen.R;
-import edu.neu.madcourse.ranchen.communication.RegistedList;
+import edu.neu.madcourse.ranchen.scraggle.NewGameActivity;
 
 public class HomeMenuActivity extends Activity {
     private AlertDialog mDialog;
@@ -76,4 +75,3 @@ public class HomeMenuActivity extends Activity {
     }
 
 }
-*/

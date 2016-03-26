@@ -67,4 +67,6 @@ both sides in the larger game.
     <string name="title_activity_registed_list">RegistedList</string>
     <string name="title_activity_home_menu">HomeMenuActivity</string>
     <string name="title_activity_pick_player">PickPlayer</string>
+    <string name="title_activity_two_player_game">TwoPlayerGameActivity</string>
+    <string name="title_activity_score_rank">ScoreRankActivity</string>
 </resources>

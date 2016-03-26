@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import edu.neu.madcourse.ranchen.communication.Communication;
 import edu.neu.madcourse.ranchen.scraggle.NewGameActivity;
+import edu.neu.madcourse.ranchen.twoPlayerScraggle.HomeMenuActivity;
 import edu.neu.madcourse.ranchen.utt.MainActivity;
 import edu.neu.madcourse.ranchen.R;
 import edu.neu.madcourse.ranchen.asn3.Dictionary;
@@ -38,6 +39,14 @@ public class aboutMeActivityFragment extends Fragment {
         View newGameButton = rootView.findViewById(R.id.newgame_button);
         View communicationButton = rootView.findViewById(R.id.communication_button);
         View twoPlayerButton = rootView.findViewById(R.id.two_player_button);
+
+        twoPlayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), HomeMenuActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
 
         communicationButton.setOnClickListener(new View.OnClickListener() {
             @Override

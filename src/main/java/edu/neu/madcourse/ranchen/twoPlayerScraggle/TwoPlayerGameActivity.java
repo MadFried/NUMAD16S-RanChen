@@ -1,4 +1,4 @@
-package edu.neu.madcourse.ranchen.scraggle;
+package edu.neu.madcourse.ranchen.twoPlayerScraggle;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,22 +30,22 @@ import java.util.Random;
 
 import edu.neu.madcourse.ranchen.R;
 
-public class NewGameActivity extends Activity {
+
+public class TwoPlayerGameActivity extends Activity {
     Context context;
 
     private int score = 0;
 
     static private int GridIds[] = {R.id.grid1_layout, R.id.grid2_layout,R.id.grid3_layout,R.id.grid4_layout,R.id.grid5_layout,
-    R.id.grid6_layout, R.id.grid7_layout, R.id.grid8_layout, R.id.grid9_layout};
+            R.id.grid6_layout, R.id.grid7_layout, R.id.grid8_layout, R.id.grid9_layout};
 
     LetterButton[][] buttons = new LetterButton[9][9];
     ArrayAdapter<String> wordListAdapter;
     WordBuilder wordBuilder;
 
-    //SharedPreferences preferences;
+    SharedPreferences preferences;
 
     LetterButtonTouchListener letterButtonListener;
-    ReuseButtonTouchListener reuseButtonTouchListener;
 
     Handler handler = new Handler();
 
@@ -93,14 +93,14 @@ public class NewGameActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_game2);
+        setContentView(R.layout.activity_two_player_game);
 
 
         readNineWords();
 
-        textView = (TextView)findViewById(R.id.scoreboard);
+        textView = (TextView)findViewById(R.id.P1scoreboard);
 
-        //preferences = this.getSharedPreferences("edu.neu.madcourse.ranchen.scraggle", Context.MODE_PRIVATE);
+        preferences = this.getSharedPreferences("edu.neu.madcourse.ranchen.twoPlayerScraggle", Context.MODE_PRIVATE);
 
         //clear button
         Button oopsButton = (Button) this.findViewById(R.id.oops_button);
@@ -128,7 +128,7 @@ public class NewGameActivity extends Activity {
                     flag = 1;
                 }else {
                     Intent intent = new Intent();
-                    intent.setClass(NewGameActivity.this, PhaseTwo.class);
+                    intent.setClass(TwoPlayerGameActivity.this, PhaseTwo.class);
                     intent.putExtra("arg", phaseTwoString);
                     intent.putExtra("score",score);
                     intent.putExtra("remainTime",remainMilli);
@@ -164,7 +164,7 @@ public class NewGameActivity extends Activity {
         // if game was previously saved, reload the list of words already made
         String savedWord;
         int key = 0;
-        while ((savedWord = getPreferences(MODE_PRIVATE).getString("l" + String.valueOf(key), null)) != null) {
+        while ((savedWord = preferences.getString("l" + String.valueOf(key), null)) != null) {
             wordList.add(savedWord);
             key++;
         }
@@ -175,28 +175,28 @@ public class NewGameActivity extends Activity {
         letterButtonListener = new LetterButtonTouchListener(wordBuilder);
 
         // makes the boggle buttons
-            Point size = new Point();
-            getWindowManager().getDefaultDisplay().getSize(size);
-            int screenWidth = size.x;
-            int screenHeight = size.y;
-            int halfScreenSize = (int)(screenWidth * 0.5);
-            int quaterScreenSize = (int)(halfScreenSize * 0.21);
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        int halfScreenSize = (int)(screenWidth * 0.5);
+        int quaterScreenSize = (int)(halfScreenSize * 0.21);
 
-            for (int i=0; i < 9; i++) {
-                grid = (GridLayout)findViewById(GridIds[i]) ;
-                for(int j= 0; j < 9; j++) {
-                    GridLayout.LayoutParams all = new GridLayout.LayoutParams();
-                    all.width = quaterScreenSize;
-                    all.height = quaterScreenSize;
-                    LetterButton newButton = new LetterButton(this, j / 3, j % 3, false);
-                    buttons[i][j] = newButton;
-                    newButton.setLayoutParams(all);
-                    grid.addView(newButton, all);
-                    newButton.setBackgroundColor(LETTER_BUTTON_BACKGROUND);
-                    //newButton.setOnTouchListener(letterButtonListener);
-                    buttons[0][j].setOnTouchListener(letterButtonListener);
-                }
+        for (int i=0; i < 9; i++) {
+            grid = (GridLayout)findViewById(GridIds[i]) ;
+            for(int j= 0; j < 9; j++) {
+                GridLayout.LayoutParams all = new GridLayout.LayoutParams();
+                all.width = quaterScreenSize;
+                all.height = quaterScreenSize;
+                LetterButton newButton = new LetterButton(this, j / 3, j % 3, false);
+                buttons[i][j] = newButton;
+                newButton.setLayoutParams(all);
+                grid.addView(newButton, all);
+                newButton.setBackgroundColor(LETTER_BUTTON_BACKGROUND);
+                //newButton.setOnTouchListener(letterButtonListener);
+                buttons[0][j].setOnTouchListener(letterButtonListener);
             }
+        }
 
         //show score
        /* String scr = String.valueOf(score);
@@ -205,46 +205,45 @@ public class NewGameActivity extends Activity {
         textView.setText(String.valueOf(scr));*/
 
 
-        if (getPreferences(MODE_PRIVATE).getString(String.valueOf(0), null) == null) {
+        if (preferences.getString(String.valueOf(0), null) == null) {
             startNewGame();
         }
-     /*   else {
+        else {
             int index = 0;
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
-                    buttons[i][j].setText(getPreferences(MODE_PRIVATE).getString(String.valueOf(index++), "-"));
+                    buttons[i][j].setText(preferences.getString(String.valueOf(index++), "-"));
                 }
             }
-        }*/
+        }
 
     }
 
-        /**
-         * Saves the current board and word state whenever the activity pauses.
-         */
-        @Override
-        protected void onPause () {
-            super.onPause();
-            mTimer.cancel();
-            mTimer = null;
-            mMediaPlayer.stop();
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
+    /**
+     * Saves the current board and word state whenever the activity pauses.
+     */
+    @Override
+    protected void onPause () {
+        super.onPause();
+        mTimer.cancel();
+        mTimer = null;
+        mMediaPlayer.stop();
+        mMediaPlayer.reset();
+        mMediaPlayer.release();
 
-
-            SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-            editor.clear();
-         /*   int index = 0;
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+            int index = 0;
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
                     editor.putString(String.valueOf(index++), buttons[i][j].getText().toString());
                 }
-            }*/
-            for (int i = 0; i < wordListAdapter.getCount(); i++) {
-                editor.putString("l" + i, wordListAdapter.getItem(i));
             }
-            editor.commit();
+        for (int i = 0; i < wordListAdapter.getCount(); i++) {
+            editor.putString("l" + i, wordListAdapter.getItem(i));
         }
+        editor.commit();
+    }
 
     @Override
     public void onResume () {
@@ -257,20 +256,10 @@ public class NewGameActivity extends Activity {
         //mTimer.start();
     }
 
-    @Override
-    public void onStop () {
-        super.onStop();
-        SharedPreferences preferences = getSharedPreferences("PREFERENCE", 0);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.commit();
-    }
-
-
-        /**
-         * Inflates the options menu.
-         * @param menu The menu to inflate
-         */
+    /**
+     * Inflates the options menu.
+     * @param menu The menu to inflate
+     */
     /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -279,10 +268,10 @@ public class NewGameActivity extends Activity {
         return true;
     }*/
 
-        /**
-         * Enables the handling of action bar item clicks
-         * @param item
-         */
+    /**
+     * Enables the handling of action bar item clicks
+     * @param item
+     */
    /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar will
@@ -296,13 +285,13 @@ public class NewGameActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }*/
 
-        /**
-         * Start a new game, clearing the list of found words and resetting the board.
-         */
+    /**
+     * Start a new game, clearing the list of found words and resetting the board.
+     */
 
-        private void startNewGame() {
-            clearSelections();
-            //readNineWords();
+    private void startNewGame() {
+        clearSelections();
+        //readNineWords();
 //            ArrayList<String> receiveDictionary = wordBuilder.getDictionary();
 //            ArrayList<String> temp = new ArrayList<>();
 //            for (int i = 0; i < receiveDictionary.size(); i++) {
@@ -311,23 +300,23 @@ public class NewGameActivity extends Activity {
 //                    temp.add(s);
 //                }
 //            }
-            for (int i = 0; i < 9; i++) {
-                int x = Math.abs(new Random().nextInt(temp.size()));
-                String NineChar = temp.get(x);
-                scrambleList.add(NineChar);
-                //scrambleList.add(temp.remove(Math.abs(new Random().nextInt()) % temp.size()));
-                String s = scrambleList.get(i);
-                char a[] = s.toCharArray();
-                for (int j = 0; j < 9; j++) {
-                    //int x = Math.abs(new Random().nextInt(s.length()));
-                    char c = a[j];
-                    Button b = buttons[i][j];
-                    b.setText(String.valueOf(c));
-                }
+        for (int i = 0; i < 9; i++) {
+            int x = Math.abs(new Random().nextInt(temp.size()));
+            String NineChar = temp.get(x);
+            scrambleList.add(NineChar);
+            //scrambleList.add(temp.remove(Math.abs(new Random().nextInt()) % temp.size()));
+            String s = scrambleList.get(i);
+            char a[] = s.toCharArray();
+            for (int j = 0; j < 9; j++) {
+                //int x = Math.abs(new Random().nextInt(s.length()));
+                char c = a[j];
+                Button b = buttons[i][j];
+                b.setText(String.valueOf(c));
             }
-            wordBuilder.clearWord();
-            wordListAdapter.clear();
         }
+        wordBuilder.clearWord();
+        wordListAdapter.clear();
+    }
 
 
        /* private void startNewGame() {
@@ -405,19 +394,19 @@ public class NewGameActivity extends Activity {
 
     public void submitSelections() {
         if(letterButtonListener.previouslyPressed != null) {
-           if(wordBuilder.getDictionary().contains(wordBuilder.getWordInProgress())) {
-               if (n < 9) {
-                   for (int i = 0; i < 9; i++) {
-                       LetterButton b = buttons[n][i];
-                       b.setOnTouchListener(letterButtonListener);
-                   }
-                   for (int j = 0; j < 9; j++) {
-                       LetterButton b = buttons[m][j];
-                       b.setOnTouchListener(null);
-                   }
-                   n++;
-                   m++;
-               }
+            if(wordBuilder.getDictionary().contains(wordBuilder.getWordInProgress())) {
+                if (n < 9) {
+                    for (int i = 0; i < 9; i++) {
+                        LetterButton b = buttons[n][i];
+                        b.setOnTouchListener(letterButtonListener);
+                    }
+                    for (int j = 0; j < 9; j++) {
+                        LetterButton b = buttons[m][j];
+                        b.setOnTouchListener(null);
+                    }
+                    n++;
+                    m++;
+                }
 
                 addScore(wordBuilder.getWordInProgress());
                 Log.d("21321313", wordBuilder.getWordInProgress());
@@ -425,38 +414,38 @@ public class NewGameActivity extends Activity {
 //              String scr = String.valueOf(score);
                 Log.d("score", "" + score);
                 textView.setText("" + score);
-               for(int i = 0; i < 9; i++) {
-                   for (int j = 0; j < 9; j++) {
-                       LetterButton b = buttons[i][j];
-                       if (b.buttonSelected) {
-                           selectedWords.add(b);
-                           b.setBackgroundColor(LETTER_BUTTON_BACKGROUND);
-                           b.buttonSelected = false;
-                       }
-                   }
-               }
+                for(int i = 0; i < 9; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        LetterButton b = buttons[i][j];
+                        if (b.buttonSelected) {
+                            selectedWords.add(b);
+                            b.setBackgroundColor(LETTER_BUTTON_BACKGROUND);
+                            b.buttonSelected = false;
+                        }
+                    }
+                }
             }
         }
         wordBuilder.clearWord();
     }
 
     public void phaseTwo() {
-                final StringBuilder sb = new StringBuilder();
-                for (int x = 0; x < selectedWords.size(); x++) {
-                  final LetterButton  b = selectedWords.get(x);
-                    b.buttonSelected = false;
-                    b.setBackgroundColor(Color.RED);
-                    b.setOnTouchListener(null);
-                    b.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            b.setBackgroundColor(Color.rgb(0, 163, 131));
-                            b.buttonSelected = true;
-                            sb.append(b.getText());
-                            phaseTwoString = sb.toString();
-                        }
-                    });
+        final StringBuilder sb = new StringBuilder();
+        for (int x = 0; x < selectedWords.size(); x++) {
+            final LetterButton  b = selectedWords.get(x);
+            b.buttonSelected = false;
+            b.setBackgroundColor(Color.RED);
+            b.setOnTouchListener(null);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    b.setBackgroundColor(Color.rgb(0, 163, 131));
+                    b.buttonSelected = true;
+                    sb.append(b.getText());
+                    phaseTwoString = sb.toString();
                 }
+            });
+        }
                /* if(b.buttonSelected) {
                     LetterButton nButton = b;
                     nButton.buttonSelected = false;
@@ -472,7 +461,7 @@ public class NewGameActivity extends Activity {
                 }*/
     }
 
-//add score
+    //add score
     public void addScore(String s) {
         if (s.length() == 3) {
             score += 1;

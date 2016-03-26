@@ -84,11 +84,17 @@
         <service android:name=".communication.GcmIntentService" />
 
         <activity
-            android:name=".scraggle.HomeMenuActivity"
+            android:name=".twoPlayerScraggle.HomeMenuActivity"
             android:label="@string/title_activity_home_menu" />
         <activity
-            android:name=".scraggle.PickPlayer"
-            android:label="@string/title_activity_pick_player"></activity>
+            android:name=".twoPlayerScraggle.PickPlayer"
+            android:label="@string/title_activity_pick_player" />
+        <activity
+            android:name=".twoPlayerScraggle.TwoPlayerGameActivity"
+            android:label="@string/title_activity_two_player_game" />
+        <activity
+            android:name=".twoPlayerScraggle.ScoreRankActivity"
+            android:label="@string/title_activity_score_rank"></activity>
     </application>
 
 </manifest>
