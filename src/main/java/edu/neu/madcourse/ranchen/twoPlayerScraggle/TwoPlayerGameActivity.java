@@ -95,6 +95,10 @@ public class TwoPlayerGameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two_player_game);
 
+        if( getIntent().getBooleanExtra("invited",false)) {
+            sendBack();
+        }
+
 
         readNineWords();
 
@@ -208,14 +212,14 @@ public class TwoPlayerGameActivity extends Activity {
         if (preferences.getString(String.valueOf(0), null) == null) {
             startNewGame();
         }
-        else {
+/*        else {
             int index = 0;
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
                     buttons[i][j].setText(preferences.getString(String.valueOf(index++), "-"));
                 }
             }
-        }
+        }*/
 
     }
 
@@ -233,12 +237,12 @@ public class TwoPlayerGameActivity extends Activity {
 
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
-            int index = 0;
+/*            int index = 0;
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
                     editor.putString(String.valueOf(index++), buttons[i][j].getText().toString());
                 }
-            }
+            }*/
         for (int i = 0; i < wordListAdapter.getCount(); i++) {
             editor.putString("l" + i, wordListAdapter.getItem(i));
         }
@@ -556,6 +560,17 @@ public class TwoPlayerGameActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getGameData() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                builder.append(buttons[i][j].getText().toString());
+                builder.append(',');
+            }
+        }
+        return builder.toString();
     }
 }
 

@@ -29,10 +29,17 @@ public class GcmIntentService extends IntentService {
 		Log.d(TAG, extras.toString());
 		if (!extras.isEmpty()) {
 			String message = extras.getString("message");
+			String p1Name = extras.getString("p1Name");
+
 			if (message != null) {
 				sendNotification(message);
 			}
+
+
+
+
 		}
+
 		// Release the wake lock provided by the WakefulBroadcastReceiver.
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
 	}

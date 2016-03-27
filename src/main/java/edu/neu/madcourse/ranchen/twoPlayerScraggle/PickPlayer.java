@@ -69,7 +69,6 @@ public class PickPlayer extends Activity {
     TimerTask timerTask;
 
     String message;
-    String gameData;
 
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -126,7 +125,7 @@ public class PickPlayer extends Activity {
                     Toast.makeText(context,"Internet Failed, You Can Play Single Player mode", Toast.LENGTH_LONG).show();
                 }
 
-                message = ((EditText) findViewById(R.id.message_box)).getText().toString();
+                message = playerUsingName + "invite you to start a scraggle game";
                 if (message.equals("")) {
                     Toast.makeText(context, "Sending Message Empty!", Toast.LENGTH_LONG).show();
                     return;
@@ -161,12 +160,12 @@ public class PickPlayer extends Activity {
         });
     }
 
-    private void startGame(final String gameData) {
+    private void sendMessage(final String message) {
        /* if (regid == null || regid.equals("")) {
             Toast.makeText(this, "You must register first", Toast.LENGTH_LONG).show();
             return;
         }*/
-        if (gameData.isEmpty()) {
+        if (message.isEmpty()) {
             Toast.makeText(this, "NoData", Toast.LENGTH_LONG).show();
             return;
         }
@@ -179,12 +178,13 @@ public class PickPlayer extends Activity {
                 //Log.d("checkcheck", reg_device);
                 Map<String, String> msgParams;
                 msgParams = new HashMap<>();
-                msgParams.put("gameData", gameData);
+                msgParams.put("data.message", message);
+                msgParams.put("data.p1Name", playerUsingName);
                 GcmNotification gcmNotification = new GcmNotification();
                 regIds.clear();
                 regIds.add(reg_device);
                 gcmNotification.sendNotification(msgParams, regIds,PickPlayer.this);
-                return "Message Sent - " + gameData;
+                return "Message Sent - " + message;
             }
 
             @Override
@@ -356,7 +356,7 @@ public class PickPlayer extends Activity {
                     handler.post(new Runnable() {
 
                         public void run() {
-                            startGame(message);
+                            sendMessage(message);
                         }
                     });
 
