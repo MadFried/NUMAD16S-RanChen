@@ -83,6 +83,18 @@
 
         <service android:name=".communication.GcmIntentService" />
 
+        <receiver android:name=".twoPlayerScraggle.GameBroadcastReceiver"
+                  android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="edu.neu.madcourse.ranchen" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".twoPlayerScraggle.GameIntentService" />
+
         <activity
             android:name=".twoPlayerScraggle.HomeMenuActivity"
             android:label="@string/title_activity_home_menu" />

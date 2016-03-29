@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -20,15 +21,21 @@ import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import edu.neu.madcourse.ranchen.R;
+import edu.neu.madcourse.ranchen.communication.RemoteClient;
+import edu.neu.madcourse.ranchen.communication.GcmNotification;
 
 public class NewGameActivity extends Activity {
     Context context;
@@ -87,6 +94,12 @@ public class NewGameActivity extends Activity {
 
     ArrayList<LetterButton> selectedWords = new ArrayList<>();
 
+    RemoteClient remoteClient;
+    String p1Name;
+    boolean accepted = false;
+    boolean startByP2 = false;
+    String gameData;
+
 
 
 
@@ -95,9 +108,14 @@ public class NewGameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game2);
 
+        //p1Name = getIntent().getExtras().getString("p1Name");
+
+
+
+
+
 
         readNineWords();
-
         textView = (TextView)findViewById(R.id.scoreboard);
 
         //preferences = this.getSharedPreferences("edu.neu.madcourse.ranchen.scraggle", Context.MODE_PRIVATE);
@@ -203,6 +221,28 @@ public class NewGameActivity extends Activity {
         Log.d("score", scr);
         TextView textView = (TextView)findViewById(R.id.scoreboard);
         textView.setText(String.valueOf(scr));*/
+       /* Bundle extras = getIntent().getExtras();
+        if (extras.isEmpty()) {
+            startNewGame();
+        }
+
+        if (!extras.isEmpty()) {
+            accepted = getIntent().getExtras().getBoolean("accepted");
+            startByP2 = getIntent().getExtras().getBoolean("startByP2");
+            gameData = getIntent().getExtras().getString("gameData");
+            p1Name = getIntent().getExtras().getString("p1Name");
+
+            if (accepted && p1Name != null) {
+                startNewGame();
+                sendGameData(getGameData(),p1Name);
+            }
+
+            if (startByP2) {
+                putgameData(gameData);
+            }
+        }*/
+
+
 
 
         if (getPreferences(MODE_PRIVATE).getString(String.valueOf(0), null) == null) {
@@ -567,6 +607,62 @@ public class NewGameActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getGameData() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                builder.append(buttons[i][j].getText().toString());
+                builder.append(',');
+            }
+        }
+        return builder.toString();
+    }
+
+    public void putgameData(String gameData) {
+        String[] fields = gameData.split(",");
+        int index = 0;
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                Button b = buttons[i][j];
+                b.setText(fields[index++].toString());
+            }
+        }
+    }
+
+    private void sendGameData(final String gameData, final String name) {
+       /* if (regid == null || regid.equals("")) {
+            Toast.makeText(this, "You must register first", Toast.LENGTH_LONG).show();
+            return;
+        }*/
+        if (gameData.isEmpty()) {
+            Toast.makeText(this, "NoData", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                List<String> regIds = new ArrayList<String>();
+                String reg_device = remoteClient.getValue(name);
+                //Log.d("checkcheck", reg_device);
+                Map<String, String> msgParams;
+                msgParams = new HashMap<>();
+                msgParams.put("data.gameData", gameData);
+                msgParams.put("data.p2Started","p2Started");
+                GcmNotification gcmNotification = new GcmNotification();
+                regIds.clear();
+                regIds.add(reg_device);
+                gcmNotification.sendNotification(msgParams, regIds,NewGameActivity.this);
+                return "Message Sent - " + gameData;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            }
+        }.execute(null, null, null);
     }
 }
 

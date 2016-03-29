@@ -34,9 +34,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.neu.madcourse.ranchen.R;
-import edu.neu.madcourse.ranchen.twoPlayerScraggle.GcmNotification;
-import edu.neu.madcourse.ranchen.twoPlayerScraggle.CommunicationConstants;
-import edu.neu.madcourse.ranchen.twoPlayerScraggle.RemoteClient;
+import edu.neu.madcourse.ranchen.communication.GcmNotification;
+import edu.neu.madcourse.ranchen.communication.RemoteClient;
 
 public class PickPlayer extends Activity {
     TextView cognitoPlayerName;
