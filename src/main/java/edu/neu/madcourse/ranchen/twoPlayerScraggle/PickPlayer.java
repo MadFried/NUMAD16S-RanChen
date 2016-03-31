@@ -109,8 +109,6 @@ public class PickPlayer extends Activity {
                     //}
                 }
                 //registerInBackground();
-                playerUsingName = playerName.getText().toString();
-                remoteClient.saveValue(playerUsingName, regid);
                 //remoteClient.fetchValue(playerName.getText().toString());
             }
         });
@@ -159,7 +157,7 @@ public class PickPlayer extends Activity {
         });
     }
 
-    private void sendMessage(final String message) {
+    private void sendMessage(final String message,final String playerUsingName) {
        /* if (regid == null || regid.equals("")) {
             Toast.makeText(this, "You must register first", Toast.LENGTH_LONG).show();
             return;
@@ -179,7 +177,7 @@ public class PickPlayer extends Activity {
                 Map<String, String> msgParams;
                 msgParams = new HashMap<>();
                 msgParams.put("data.message", message);
-                msgParams.put("data.MyName", playerUsingName);
+                msgParams.put("data.p1name", playerUsingName);
                 GcmNotification gcmNotification = new GcmNotification();
                 regIds.clear();
                 regIds.add(reg_device);
@@ -251,6 +249,8 @@ public class PickPlayer extends Activity {
             @Override
             protected void onPostExecute(String msg) {
                 Log.d(TAG, msg);
+                playerUsingName = playerName.getText().toString();
+                remoteClient.saveValue(playerUsingName, regid);
                 //mDisplay.append(msg + "\n");
             }
         }.execute(null, null, null);
@@ -356,7 +356,7 @@ public class PickPlayer extends Activity {
                     handler.post(new Runnable() {
 
                         public void run() {
-                            sendMessage(message);
+                            sendMessage(message,playerUsingName);
                         }
                     });
 

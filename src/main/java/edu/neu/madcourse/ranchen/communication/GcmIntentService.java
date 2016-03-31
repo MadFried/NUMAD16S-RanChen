@@ -1,4 +1,3 @@
-/*
 package edu.neu.madcourse.ranchen.communication;
 
 import android.app.IntentService;
@@ -58,4 +57,4 @@ public class GcmIntentService extends IntentService {
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 	}
 
-}*/
+}

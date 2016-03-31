@@ -30,8 +30,10 @@ public class GameIntentService extends IntentService {
         Log.d(TAG, extras.toString());
         if (!extras.isEmpty()) {
             String message = extras.getString("message");
-            String p1name = extras.getString("MyName");
-
+            String p1name = extras.getString("p1name");
+            if(p1name != null) {
+                Log.d("Intend P1name get?", p1name);
+            }
             //String clickedflag = extras.getString("clickedFlag");
             String p2Started = extras.getString("p2Started");
             String gameData = extras.getString("gameData");

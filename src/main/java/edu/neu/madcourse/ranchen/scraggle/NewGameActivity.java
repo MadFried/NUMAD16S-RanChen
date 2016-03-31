@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.neu.madcourse.ranchen.R;
 import edu.neu.madcourse.ranchen.communication.RemoteClient;
@@ -39,6 +41,9 @@ import edu.neu.madcourse.ranchen.communication.GcmNotification;
 
 public class NewGameActivity extends Activity {
     Context context;
+
+    Timer timer;
+    TimerTask timerTask;
 
     private int score = 0;
 
@@ -105,6 +110,7 @@ public class NewGameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game2);
 
+        remoteClient = new RemoteClient(this);
         //p1Name = getIntent().getExtras().getString("p1Name");
 
 
@@ -254,8 +260,8 @@ public class NewGameActivity extends Activity {
             boolean acceptedFlag = getIntent().getBooleanExtra("accepted", false);
             String p1name = getIntent().getStringExtra("p1name");
             Log.d("p1ID Passed?", p1name);
-            notifyOtherPlayer(acceptedFlag, p1name);
-
+            remoteClient.fetchValue(p1name);
+            startTimer(acceptedFlag, p1name);
         } /*else {
         }*/
         else if(startByP2) {
@@ -634,6 +640,44 @@ public class NewGameActivity extends Activity {
         }
     }
 
+    public void startTimer(boolean acceptedFlag,String p1name) {
+        //set a new Timer
+        timer = new Timer();
+        //initialize the TimerTask's job
+        initializeTimerTask(acceptedFlag, p1name);
+        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+        // The values can be adjusted depending on the performance
+        timer.schedule(timerTask, 5000, 1000);
+    }
+
+    public void stoptimertask() {
+        //stop the timer, if it's not already null
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    public void initializeTimerTask(final boolean acceptedFlag, final String p1name) {
+        timerTask = new TimerTask() {
+            public void run() {
+                Log.d("gameActivity", "isDataFetched >>>>" + remoteClient.isDataFetched());
+                if(remoteClient.isDataFetched())
+                {
+                    handler.post(new Runnable() {
+
+                        public void run() {
+                            notifyOtherPlayer(acceptedFlag, p1name);
+                        }
+                    });
+
+                    stoptimertask();
+                }
+
+            }
+        };
+    }
+
     public String getGameData() {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < 9; i++) {
@@ -678,10 +722,7 @@ public class NewGameActivity extends Activity {
             protected String doInBackground(Void... params) {
                 List<String> regIds = new ArrayList<String>();
                 String reg_device = remoteClient.getValue(p1name);
-                Log.d("checkcheck", reg_device);
-
-                regIds.clear();
-                regIds.add(reg_device);
+                /*Log.d("checkcheck", reg_device);*/
 
                 Map<String, String> msgParams;
                 msgParams = new HashMap<>();
@@ -689,16 +730,17 @@ public class NewGameActivity extends Activity {
                 msgParams.put("data.p2Started","p2Started");
 
                 GcmNotification gcmNotification = new GcmNotification();
+                regIds.clear();
+                regIds.add(reg_device);
                 gcmNotification.sendNotification(msgParams, regIds,NewGameActivity.this);
-
 
                 return "Message Sent - " + p1name;
             }
 
-            @Override
+          /*  @Override
             protected void onPostExecute(String msg) {
                 Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-            }
+            }*/
         }.execute(null, null, null);
     }
 }
