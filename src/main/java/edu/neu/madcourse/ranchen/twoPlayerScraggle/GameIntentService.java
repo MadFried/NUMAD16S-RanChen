@@ -30,19 +30,31 @@ public class GameIntentService extends IntentService {
         Log.d(TAG, extras.toString());
         if (!extras.isEmpty()) {
             String message = extras.getString("message");
-            String p1Name = extras.getString("p1Name");
+            String p1name = extras.getString("MyName");
+
+            //String clickedflag = extras.getString("clickedFlag");
             String p2Started = extras.getString("p2Started");
             String gameData = extras.getString("gameData");
 
-            if (message != null) {
-                sendNotification(message, p1Name);
+            if (message != null && p1name!= null) {
+                sendNotification(message, p1name);
                 GameBroadcastReceiver.completeWakefulIntent(intent);
             }
             // Release the wake lock provided by the WakefulBroadcastReceiver.
 
 
-            if (p2Started != null && p2Started.equalsIgnoreCase("p2Started")) {
-                sendBack(gameData);
+            if ( p2Started!= null && gameData != null) {
+                if(p2Started.equals("p2Started")){
+                    Intent gameIntent = new Intent(this,NewGameActivity.class);
+                    gameIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    gameIntent.putExtra("startByP2", true);
+                    gameIntent.putExtra("gameData", gameData);
+
+                    Log.d(TAG, "gameData" + gameData);
+
+                    getApplication().startActivity(gameIntent);
+                }
                 GameBroadcastReceiver.completeWakefulIntent(intent);
             }
 
@@ -56,7 +68,7 @@ public class GameIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    public void sendNotification(String message, String p1Name) {
+    public void sendNotification(String message, String p1name) {
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent;
 
@@ -64,7 +76,7 @@ public class GameIntentService extends IntentService {
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         notificationIntent.putExtra("show_response", "show_response");
         notificationIntent.putExtra("accepted", true);
-        notificationIntent.putExtra("p1Name", p1Name);
+        notificationIntent.putExtra("p1name", p1name);
         PendingIntent intent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
@@ -78,7 +90,7 @@ public class GameIntentService extends IntentService {
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
-    public void sendBack(String gameData) {
+   /* public void sendBack(String gameData) {
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent notificationIntent;
 
@@ -92,11 +104,11 @@ public class GameIntentService extends IntentService {
                 this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Let the game begin")
-        /*        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setContentText(message).setTicker(message)*/
+        *//*        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setContentText(message).setTicker(message)*//*
                 .setAutoCancel(true);
         mBuilder.setContentIntent(intent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-    }
+    }*/
 
 }

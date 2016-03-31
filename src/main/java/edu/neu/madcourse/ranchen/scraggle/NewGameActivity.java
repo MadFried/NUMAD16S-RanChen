@@ -95,9 +95,6 @@ public class NewGameActivity extends Activity {
     ArrayList<LetterButton> selectedWords = new ArrayList<>();
 
     RemoteClient remoteClient;
-    String p1Name;
-    boolean accepted = false;
-    boolean startByP2 = false;
     String gameData;
 
 
@@ -245,9 +242,37 @@ public class NewGameActivity extends Activity {
 
 
 
-        if (getPreferences(MODE_PRIVATE).getString(String.valueOf(0), null) == null) {
+        /*if (getPreferences(MODE_PRIVATE).getString(String.valueOf(0), null) == null) {
             startNewGame();
+        }*/
+        boolean startByP2 = getIntent().getExtras().getBoolean("startByP2");
+        if(!startByP2) {
+            startNewGame();
+            gameData = getGameData();
+
+            Log.d("accepted?", getIntent().getExtras().getBoolean("accepted") + "");
+            boolean acceptedFlag = getIntent().getBooleanExtra("accepted", false);
+            String p1name = getIntent().getStringExtra("p1name");
+            Log.d("p1ID Passed?", p1name);
+            notifyOtherPlayer(acceptedFlag, p1name);
+
+        } /*else {
+        }*/
+        else if(startByP2) {
+            gameData = getIntent().getStringExtra("gameData");
+            putgameData(gameData);
         }
+       /* if(getIntent().getExtras().getBoolean("accepted")) {
+            startNewGame();
+            p1Name = getIntent().getExtras().getString("p1Name");
+            Log.d("accepted P1Name?", p1Name);
+            sendGameData(getGameData(), p1Name);
+        }*/
+
+      /*  if(getIntent().getExtras().getBoolean("startByP2")) {
+            gameData = getIntent().getExtras().getString("gameData");
+            putgameData(gameData);
+        }*/
      /*   else {
             int index = 0;
             for (int i = 0; i < 9; i++) {
@@ -631,31 +656,43 @@ public class NewGameActivity extends Activity {
         }
     }
 
-    private void sendGameData(final String gameData, final String name) {
+    private void notifyOtherPlayer(boolean acceptedFlag, String p1name) {
+        if (acceptedFlag && ! p1name.isEmpty()) {
+            Log.d("p1ID get?", p1name);
+            sendGameData(p1name);
+        }
+    }
+
+    private void sendGameData(final String p1name) {
        /* if (regid == null || regid.equals("")) {
             Toast.makeText(this, "You must register first", Toast.LENGTH_LONG).show();
             return;
         }*/
-        if (gameData.isEmpty()) {
+     /*   if (gameData.isEmpty()) {
             Toast.makeText(this, "NoData", Toast.LENGTH_LONG).show();
             return;
-        }
+        }*/
 
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
                 List<String> regIds = new ArrayList<String>();
-                String reg_device = remoteClient.getValue(name);
-                //Log.d("checkcheck", reg_device);
+                String reg_device = remoteClient.getValue(p1name);
+                Log.d("checkcheck", reg_device);
+
+                regIds.clear();
+                regIds.add(reg_device);
+
                 Map<String, String> msgParams;
                 msgParams = new HashMap<>();
                 msgParams.put("data.gameData", gameData);
                 msgParams.put("data.p2Started","p2Started");
+
                 GcmNotification gcmNotification = new GcmNotification();
-                regIds.clear();
-                regIds.add(reg_device);
                 gcmNotification.sendNotification(msgParams, regIds,NewGameActivity.this);
-                return "Message Sent - " + gameData;
+
+
+                return "Message Sent - " + p1name;
             }
 
             @Override

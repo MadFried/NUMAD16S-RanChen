@@ -174,11 +174,12 @@ public class PickPlayer extends Activity {
             protected String doInBackground(Void... params) {
                 List<String> regIds = new ArrayList<String>();
                 String reg_device = remoteClient.getValue(findPlayerName);
+                //getSharedPreferences()
                 //Log.d("checkcheck", reg_device);
                 Map<String, String> msgParams;
                 msgParams = new HashMap<>();
                 msgParams.put("data.message", message);
-                msgParams.put("data.p1Name", playerUsingName);
+                msgParams.put("data.MyName", playerUsingName);
                 GcmNotification gcmNotification = new GcmNotification();
                 regIds.clear();
                 regIds.add(reg_device);
