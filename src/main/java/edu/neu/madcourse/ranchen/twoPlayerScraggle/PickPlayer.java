@@ -80,7 +80,13 @@ public class PickPlayer extends Activity {
     GoogleCloudMessaging gcm;
     Context context;
     String regid;
-    private String findPlayerName;
+
+    private static String findPlayerName;
+
+    public String getFindPlayerName() {
+        return findPlayerName;
+    }
+
     final android.os.Handler handler = new android.os.Handler();
 
     @Override

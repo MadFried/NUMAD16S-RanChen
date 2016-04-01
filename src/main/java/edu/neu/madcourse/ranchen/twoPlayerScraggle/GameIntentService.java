@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -19,9 +21,12 @@ public class GameIntentService extends IntentService {
     private NotificationManager mNotificationManager;
     private static final String TAG = "GcmIntentService";
 
+    Handler mhandler;
+
 
     public GameIntentService() {
         super("GcmIntentService");
+        mhandler = new Handler();
     }
 
     @Override
@@ -34,9 +39,16 @@ public class GameIntentService extends IntentService {
             if(p1name != null) {
                 Log.d("Intend P1name get?", p1name);
             }
-            //String clickedflag = extras.getString("clickedFlag");
+
+           /* String p2name = extras.getString("p2name");
+            if(p2name != null) {
+                Log.d("Intent p2name get?", p2name);
+            }*/
             String p2Started = extras.getString("p2Started");
             String gameData = extras.getString("gameData");
+
+            String score = extras.getString("score");
+            String opponentName = extras.getString("opponentName");
 
             if (message != null && p1name!= null) {
                 sendNotification(message, p1name);
@@ -54,13 +66,40 @@ public class GameIntentService extends IntentService {
                     gameIntent.putExtra("gameData", gameData);
 
                     Log.d(TAG, "gameData" + gameData);
-
                     getApplication().startActivity(gameIntent);
                 }
                 GameBroadcastReceiver.completeWakefulIntent(intent);
             }
 
+            if (score !=null && opponentName != null) {
+                boolean active;
+                active = getSharedPreferences("RanChen", MODE_PRIVATE).getBoolean("active", false);
+                Log.d("active or not", active+"");
+                if (active) {
+                    mhandler.post(new DisplayToast(this, "your opponent current score is:" + score));
+                }
+                if (!active) {
+                    String scoreMessage = "your Opponent current score is:" + score;
+                    mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+                    Intent notificationIntent;
 
+                    notificationIntent = new Intent(this,NewGameActivity.class);
+                    notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    notificationIntent.putExtra("show_response", "show_response");
+                    PendingIntent scoreIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                            this)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle("Time to your move")
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(scoreMessage))
+                            .setContentText(scoreMessage).setTicker(scoreMessage)
+                            .setAutoCancel(true);
+                    mBuilder.setContentIntent(scoreIntent);
+                    mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+                }
+                GameBroadcastReceiver.completeWakefulIntent(intent);
+            }
         }
 
         // Release the wake lock provided by the WakefulBroadcastReceiver.

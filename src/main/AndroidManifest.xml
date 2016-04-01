@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
 
     <permission
         android:name="edu.neu.madcourse.ranchen.permission.C2D_MESSAGE"

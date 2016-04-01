@@ -12,6 +12,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -42,9 +43,13 @@ import java.util.TimerTask;
 import edu.neu.madcourse.ranchen.R;
 import edu.neu.madcourse.ranchen.communication.RemoteClient;
 import edu.neu.madcourse.ranchen.communication.GcmNotification;
+import edu.neu.madcourse.ranchen.twoPlayerScraggle.PickPlayer;
 
 public class NewGameActivity extends Activity {
     Context context;
+
+    //To check the Activity is active or not.
+    boolean active = false;
 
     Timer timer;
     TimerTask timerTask;
@@ -106,11 +111,20 @@ public class NewGameActivity extends Activity {
     RemoteClient remoteClient;
     String gameData;
 
-    private SensorManager mSensorManager;
-    private float mAccel; // acceleration apart from gravity
-    private float mAccelCurrent; // current acceleration including gravity
-    private float mAccelLast; // last acceleration including gravity
+    //p1,p2 names
+    String p2name;
+    String p1name;
 
+    //who is p1, who is p2
+    boolean startByP2 = false;
+
+    // The following are used for the shake detection
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+
+    //
+    PickPlayer pickPlayer = new PickPlayer();
 
 
 
@@ -119,11 +133,16 @@ public class NewGameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game2);
 
+        active = true;
+        //set sharedPreference for activeFlag.
+        SharedPreferences.Editor editor = getSharedPreferences("RanChen", MODE_PRIVATE).edit();
+        editor.clear();
+        editor.putBoolean("active", active);
+        editor.commit();
+
+
         remoteClient = new RemoteClient(this);
         //p1Name = getIntent().getExtras().getString("p1Name");
-
-
-
 
 
 
@@ -132,15 +151,23 @@ public class NewGameActivity extends Activity {
 
         //preferences = this.getSharedPreferences("edu.neu.madcourse.ranchen.scraggle", Context.MODE_PRIVATE);
 
+        //shakeDetection
+        // ShakeDetector initialization
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                clearSelections();
+                wordBuilder.clearWord();
+            }
+        });
+
         //clear button
         Button oopsButton = (Button) this.findViewById(R.id.oops_button);
         oopsButton.setOnTouchListener(new OopsButtonListener());
-
-        //sensor
-        if (mAccel > 12) {
-            clearSelections();
-            wordBuilder.clearWord();
-        }
 
         //user submit selection
         Button submitButton = (Button) this.findViewById(R.id.submit_button);
@@ -151,6 +178,15 @@ public class NewGameActivity extends Activity {
                 letterButtonListener.previouslyPressed = null;
                 wordBuilder.clearWord();*/
                 submitSelections();
+                    if(startByP2) {
+                        Log.d("p2name ready for fetch?>>>", p2name);
+                        remoteClient.fetchValue(p2name);
+                        startSendScoreTimer(score + "", p2name);
+                    }
+                    if (!startByP2) {
+                        remoteClient.fetchValue(p1name);
+                        startSendScoreTimer(score + "", p1name);
+                    }
             }
         });
 
@@ -266,34 +302,25 @@ public class NewGameActivity extends Activity {
         /*if (getPreferences(MODE_PRIVATE).getString(String.valueOf(0), null) == null) {
             startNewGame();
         }*/
-        boolean startByP2 = getIntent().getExtras().getBoolean("startByP2");
+        startByP2 = getIntent().getExtras().getBoolean("startByP2");
         if(!startByP2) {
             startNewGame();
             gameData = getGameData();
 
             Log.d("accepted?", getIntent().getExtras().getBoolean("accepted") + "");
             boolean acceptedFlag = getIntent().getBooleanExtra("accepted", false);
-            String p1name = getIntent().getStringExtra("p1name");
-            Log.d("p1ID Passed?", p1name);
+            p1name = getIntent().getStringExtra("p1name");
+            Log.d("p1name Passed?>>>>>", p1name);
             remoteClient.fetchValue(p1name);
             startTimer(acceptedFlag, p1name);
-        } /*else {
-        }*/
+        }
         else if(startByP2) {
+            p2name = pickPlayer.getFindPlayerName();
+            Log.d("p2name>>>>>>>>>", "" + p2name);
             gameData = getIntent().getStringExtra("gameData");
             putgameData(gameData);
         }
-       /* if(getIntent().getExtras().getBoolean("accepted")) {
-            startNewGame();
-            p1Name = getIntent().getExtras().getString("p1Name");
-            Log.d("accepted P1Name?", p1Name);
-            sendGameData(getGameData(), p1Name);
-        }*/
 
-      /*  if(getIntent().getExtras().getBoolean("startByP2")) {
-            gameData = getIntent().getExtras().getString("gameData");
-            putgameData(gameData);
-        }*/
      /*   else {
             int index = 0;
             for (int i = 0; i < 9; i++) {
@@ -310,15 +337,22 @@ public class NewGameActivity extends Activity {
          */
         @Override
         protected void onPause () {
-            mSensorManager.unregisterListener(mSensorListener);
             super.onPause();
+            mSensorManager.unregisterListener(mShakeDetector);
+            active = false;
+            SharedPreferences.Editor editor = getSharedPreferences("RanChen", MODE_PRIVATE).edit();
+            editor.clear();
+            editor.putBoolean("active", active);
+            editor.commit();
+
             mTimer.cancel();
             mTimer = null;
             mMediaPlayer.stop();
             mMediaPlayer.reset();
             mMediaPlayer.release();
 
-            SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+
+            SharedPreferences.Editor meditor = getPreferences(MODE_PRIVATE).edit();
             editor.clear();
          /*   int index = 0;
             for (int i = 0; i < 9; i++) {
@@ -329,20 +363,19 @@ public class NewGameActivity extends Activity {
             for (int i = 0; i < wordListAdapter.getCount(); i++) {
                 editor.putString("l" + i, wordListAdapter.getItem(i));
             }
-            editor.commit();
+            meditor.commit();
         }
 
     @Override
     public void onResume () {
         super.onResume();
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
         mMediaPlayer = MediaPlayer.create(this, R.raw.rx0);
         mMediaPlayer.setLooping(true);
         mMediaPlayer.start();
 
         mTimer = new MyTimer(remainMilli, 1000);
         //mTimer.start();
-        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-
     }
 
     @Override
@@ -719,20 +752,12 @@ public class NewGameActivity extends Activity {
 
     private void notifyOtherPlayer(boolean acceptedFlag, String p1name) {
         if (acceptedFlag && ! p1name.isEmpty()) {
-            Log.d("p1ID get?", p1name);
+            Log.d("p1name get?", p1name);
             sendGameData(p1name);
         }
     }
 
     private void sendGameData(final String p1name) {
-       /* if (regid == null || regid.equals("")) {
-            Toast.makeText(this, "You must register first", Toast.LENGTH_LONG).show();
-            return;
-        }*/
-     /*   if (gameData.isEmpty()) {
-            Toast.makeText(this, "NoData", Toast.LENGTH_LONG).show();
-            return;
-        }*/
 
         new AsyncTask<Void, Void, String>() {
             @Override
@@ -761,21 +786,73 @@ public class NewGameActivity extends Activity {
         }.execute(null, null, null);
     }
 
-    private final SensorEventListener mSensorListener = new SensorEventListener() {
+    public void startSendScoreTimer(String score,String opponentName) {
+        //set a new Timer
+        timer = new Timer();
+        //initialize the TimerTask's job
+        initializeScoreTimerTask(score, opponentName);
+        //schedule the timer, after the first 5000ms the TimerTask will run every 10000ms
+        // The values can be adjusted depending on the performance
+        timer.schedule(timerTask, 5000, 1000);
+    }
 
-        public void onSensorChanged(SensorEvent se) {
-            float x = se.values[0];
-            float y = se.values[1];
-            float z = se.values[2];
-            mAccelLast = mAccelCurrent;
-            mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
-            float delta = mAccelCurrent - mAccelLast;
-            mAccel = mAccel * 0.9f + delta; // perform low-cut filter
-        }
+    public void initializeScoreTimerTask(final String score, final String opponentName) {
+        timerTask = new TimerTask() {
+            public void run() {
+                Log.d("gameActivity", "isDataFetched >>>>" + remoteClient.isDataFetched());
+                if(remoteClient.isDataFetched())
+                {
+                    handler.post(new Runnable() {
 
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        }
-    };
+                        public void run() {
+                            sendScore(score, opponentName);
+                        }
+                    });
+
+                    stoptimertask();
+                }
+
+            }
+        };
+    }
+
+    private void sendScore(final String score, final String opponentName) {
+       /* if (regid == null || regid.equals("")) {
+            Toast.makeText(this, "You must register first", Toast.LENGTH_LONG).show();
+            return;
+        }*/
+     /*   if (gameData.isEmpty()) {
+            Toast.makeText(this, "NoData", Toast.LENGTH_LONG).show();
+            return;
+        }*/
+
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                List<String> regIds = new ArrayList<String>();
+                String reg_device = remoteClient.getValue(opponentName);
+                /*Log.d("checkcheck", reg_device);*/
+
+                Map<String, String> msgParams;
+                msgParams = new HashMap<>();
+                msgParams.put("data.score", score);
+                msgParams.put("data.opponentName",opponentName);
+
+                GcmNotification gcmNotification = new GcmNotification();
+                regIds.clear();
+                regIds.add(reg_device);
+                gcmNotification.sendNotification(msgParams, regIds,NewGameActivity.this);
+
+                return "Message Sent - " + opponentName;
+            }
+
+          /*  @Override
+            protected void onPostExecute(String msg) {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            }*/
+        }.execute(null, null, null);
+    }
+
 }
 
 
