@@ -1,5 +1,8 @@
 package edu.neu.madcourse.ranchen.scraggle;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -11,7 +14,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,6 +27,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import edu.neu.madcourse.ranchen.R;
+import edu.neu.madcourse.ranchen.communication.RemoteClient;
+import edu.neu.madcourse.ranchen.twoPlayerScraggle.ScoreRankActivity;
 
 public class PhaseTwo extends Activity {
     LetterButton[] Buttons = new LetterButton[9];
@@ -39,12 +46,16 @@ public class PhaseTwo extends Activity {
     TextView scoreButton;
     ArrayList<String> output = new ArrayList<>();
 
+    //remoteClient
+    RemoteClient remoteClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phase_two);
 
+        remoteClient = new RemoteClient(this);
 
 
         String data = getIntent().getExtras().getString("arg");
@@ -192,7 +203,32 @@ public class PhaseTwo extends Activity {
             txtTimer.setText("Opps!! Time Up..");
             isRunning=false;
             remainMilli = 0;
-            finish();
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(PhaseTwo.this);
+            alertDialog.setTitle("Post Score");
+            alertDialog.setMessage("Enter your name");
+
+            final EditText input = new EditText(PhaseTwo.this);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            input.setLayoutParams(lp);
+            alertDialog.setView(input);
+            alertDialog.setIcon(R.mipmap.ic_launcher);
+
+            alertDialog.setPositiveButton("Post", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String name = input.getText().toString();
+                    if (name != null) {
+                        remoteClient.saveValue(name, score + "");
+                        Intent goScoreRank = new Intent(PhaseTwo.this, ScoreRankActivity.class);
+                        goScoreRank.putExtra("scoreName", name);
+                        startActivity(goScoreRank);
+                    }
+                }
+            });
+            alertDialog.show();
+            //finish();
         }
 
         //this method is called for every iteration of time interval

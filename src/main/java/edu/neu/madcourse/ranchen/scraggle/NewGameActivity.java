@@ -381,7 +381,7 @@ public class NewGameActivity extends Activity {
     @Override
     public void onStop () {
         super.onStop();
-        SharedPreferences preferences = getSharedPreferences("PREFERENCE", 0);
+        SharedPreferences preferences = getSharedPreferences("RanChen", 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();

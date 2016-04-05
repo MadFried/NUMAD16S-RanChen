@@ -54,9 +54,7 @@ public class PickPlayer extends Activity {
         this.playerUsingName = playerUsingName;
     }
 
-    private String playerUsingName;
-
-    String imeistring = null;
+    private static String playerUsingName;
 
     RemoteClient remoteClient;
 
