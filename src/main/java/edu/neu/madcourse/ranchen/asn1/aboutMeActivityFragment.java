@@ -2,6 +2,7 @@ package edu.neu.madcourse.ranchen.asn1;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,6 +40,14 @@ public class aboutMeActivityFragment extends Fragment {
         View newGameButton = rootView.findViewById(R.id.newgame_button);
         View communicationButton = rootView.findViewById(R.id.communication_button);
         View twoPlayerButton = rootView.findViewById(R.id.two_player_button);
+        View trickiestButton = rootView.findViewById(R.id.trickiest_part_button);
+
+        trickiestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent("edu.neu.madcourse.chenjinhou.jumpMadness"));
+            }
+        });
 
         twoPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
