@@ -41,6 +41,14 @@ public class aboutMeActivityFragment extends Fragment {
         View communicationButton = rootView.findViewById(R.id.communication_button);
         View twoPlayerButton = rootView.findViewById(R.id.two_player_button);
         View trickiestButton = rootView.findViewById(R.id.trickiest_part_button);
+        View finalProjectButton = rootView.findViewById(R.id.final_project_button);
+
+        finalProjectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent("edu.neu.madcourse.chenjinhou.finalProject"));
+            }
+        });
 
         trickiestButton.setOnClickListener(new View.OnClickListener() {
             @Override

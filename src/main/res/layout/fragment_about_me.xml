@@ -16,7 +16,7 @@
         android:id="@+id/button"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0sp"
         android:textSize="15dp"
         android:textStyle="bold|italic" />
 
@@ -27,7 +27,7 @@
         android:id="@+id/error_button"
         android:layout_below="@+id/button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0sp"
         android:textSize="15dp"
         android:textStyle="bold|italic" />
 
@@ -38,7 +38,7 @@
         android:id="@+id/tictac_button"
         android:layout_below="@+id/error_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0sp"
         android:textSize="15dp"
         android:textStyle="bold|italic" />
 
@@ -49,7 +49,7 @@
         android:text="@string/dictionary_label"
         android:layout_below="@id/tictac_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0sp"
         android:textSize="15dp"
         android:textStyle="bold|italic"/>
 
@@ -60,7 +60,7 @@
         android:text="Word Game"
         android:layout_below="@+id/dictionary_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0sp"
         android:textSize="15dp"
         android:textStyle="bold|italic" />
 
@@ -71,7 +71,7 @@
         android:text="Communication"
         android:layout_below="@+id/newgame_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0sp"
         android:textSize="15dp"
         android:textStyle="bold|italic"/>
     <Button
@@ -81,7 +81,7 @@
         android:text="Two Player Word Game"
         android:layout_below="@+id/communication_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0sp"
         android:textSize="15dp"
         android:textStyle="bold|italic" />
     <Button
@@ -91,7 +91,7 @@
         android:text="Trickiest Part"
         android:layout_below="@+id/two_player_button"
        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0sp"
         android:textSize="15dp"
         android:textStyle="bold|italic"/>
 
@@ -103,7 +103,18 @@
         android:id="@+id/quit_button"
         android:textSize="15dp"
         android:textStyle="bold|italic"
+        android:layout_below="@+id/final_project_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0sp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:id="@+id/final_project_button"
+        android:text="FinalProject"
+        android:textSize="15dp"
+        android:textStyle="bold|italic"
         android:layout_below="@+id/trickiest_part_button"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="0dp"/>
 </RelativeLayout>
